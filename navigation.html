@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Abstract Horror Grid with Ghostly Mist</title>
+<style>
+  html, body {
+    margin: 0;
+    background: #000;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .grid-item {
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+  }
+  .clickable1,
+  .clickable2,
+  .clickable3,
+  .clickable4 {
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, border 0.3s ease;
+  }
+
+  .clickable1:hover,
+  .clickable1.revealed,
+  .clickable2:hover,
+  .clickable2.revealed,
+  .clickable3:hover,
+  .clickable3.revealed,
+  .clickable4:hover,
+  .clickable4.revealed {
+    border: 2px solid crimson;
+    box-shadow: 0 0 20px red;
+  }
+
+  /* Black overlay on each grid-item */
+  .grid-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: black;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+  }
+
+  .grid-item.revealed::before {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Mist effect above image but below overlay */
+  .mist {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.1),
+      rgba(0, 0, 0, 0.3)
+    );
+    opacity: 1;
+    animation: mistDrift 8s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    filter: blur(6px);
+    transition: opacity 1s ease;
+    z-index: 6;
+  }
+
+  .grid-item.revealed .mist {
+    opacity: 0;
+    transition-delay: 0.2s;
+  }
+
+  /* Images start invisible and blurred */
+  .grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    filter: grayscale(1) brightness(0.5) blur(3px);
+    clip-path: circle(0% at 50% 50%);
+    transition: all 1s ease;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* When revealed, fade in and sharpen image */
+  .grid-item.revealed img {
+    opacity: 1;
+    filter: grayscale(0) brightness(1) blur(0);
+    clip-path: circle(150% at 50% 50%);
+    transition-delay: 0.3s;
+  }
+
+  .fit-contain {
+    object-fit: contain;
+    background: #000;
+  }
+
+  .bg-fill {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px) brightness(0.5);
+    z-index: 0;
+    opacity: 1;
+    transition: opacity 0.8s ease;
+  }
+
+  .interactive-image.interacted .bg-fill {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .grid-item img.fit-contain {
+    object-fit: contain;
+    background-color: transparent;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  }
+
+  @keyframes ghostlyAppear {
+    0% {
+      opacity: 0;
+      transform: scale(1.2);
+      filter: blur(10px) brightness(0.2);
+    }
+    50% {
+      opacity: 0.7;
+      filter: blur(3px) brightness(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0) brightness(1);
+    }
+  }
+
+  .grid-item.revealed img.ghostly {
+    animation: ghostlyAppear 1.5s ease forwards;
+  }
+
+  @keyframes mistDrift {
+    0%, 100% {
+      background-position: center center;
+    }
+    50% {
+      background-position: 10% 15%;
+    }
+  }
+
+  #blackOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    z-index: 9999;
+    transition: opacity 1s ease;
+    pointer-events: none;
+  }
+
+  #gridWrapper {
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  .reveal #gridWrapper {
+    opacity: 1;
+  }
+
+  .reveal #blackOverlay {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Back to Home button styling */
+  #backHomeBtn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(220, 20, 60, 0.8); /* Crimson, semi-transparent */
+    color: white;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 12px crimson;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    user-select: none;
+    z-index: 10000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  #backHomeBtn.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #backHomeBtn:hover {
+    background: rgba(220, 20, 60, 1);
+    box-shadow: 0 0 18px crimson;
+  }
+</style>
+</head>
+<body>
+
+<div id="blackOverlay"></div>
+
+<div id="gridWrapper" class="grid">
+  <!-- Row 1 -->
+  <a href="story1.html" class="grid-item clickable1">
+    <div class="mist"></div>
+    <img src="img1.jpg" alt="Story 1" />
+  </a>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img2.jpg" alt="" />
+  </div>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img3.jpg" alt="" />
+  </div>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img4.jpg" alt="" />
+  </div>
+
+  <!-- Row 2 -->
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img5.jpg" alt="" />
+  </div>
+  <a href="story2.html" class="grid-item clickable2 interactive-image">
+    <div class="bg-fill" style="background-image: url('img6.jpg');"></div>
+    <img src="img6.jpg" alt="Story 2" class="fit-contain ghostly" />
+  </a>  
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img7.jpg" alt="" />
+  </div>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img8.jpg" alt="" />
+  </div>
+
+  <!-- Row 3 -->
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img9.jpg" alt="" />
+  </div>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img10.jpg" alt="" />
+  </div>
+  <a href="story3.html" class="grid-item clickable3 interactive-image">
+    <div class="bg-fill" style="background-image: url('img11.jpg');"></div>
+    <img src="img11.jpg" alt="Story 3" class="fit-contain ghostly" />
+  </a>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img12.jpg" alt="" />
+  </div>
+
+  <!-- Row 4 -->
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img13.jpg" alt="" />
+  </div>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img14.jpg" alt="" />
+  </div>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img15.jpg" alt="" />
+  </div>
+  <a href="story4.html" class="grid-item clickable4">
+    <div class="mist"></div>
+    <img src="img16.jpg" alt="Story 4" />
+  </a>
+</div>
+
+<!-- Back to Home button -->
+<button id="backHomeBtn" title="Back to Home Screen" aria-label="Back to Home Screen"> Home</button>
+
+<script>
+  // Reveal gridWrapper and fade out blackOverlay on first interaction
+  let revealed = false;
+  const body = document.body;
+  const backHomeBtn = document.getElementById('backHomeBtn');
+
+  function triggerReveal() {
+    if (revealed) return;
+    revealed = true;
+    body.classList.add('reveal');
+    // Show the Back to Home button once any image is revealed
+    backHomeBtn.classList.add('visible');
+  }
+
+  window.addEventListener('mousemove', triggerReveal);
+  window.addEventListener('touchstart', triggerReveal);
+  window.addEventListener('click', triggerReveal);
+
+  // Individual grid-item reveal on hover or touch
+  document.addEventListener('DOMContentLoaded', () => {
+    const gridItems = document.querySelectorAll('.grid-item');
+
+    gridItems.forEach(item => {
+      item.addEventListener('mouseover', () => {
+        item.classList.add('revealed');
+        if (!revealed) triggerReveal();
+      });
+      item.addEventListener('mousedown', () => {
+        item.classList.add('revealed');
+        if (!revealed) triggerReveal();
+      });
+      // For touch support
+      item.addEventListener('touchstart', () => {
+        item.classList.add('revealed');
+        if (!revealed) triggerReveal();
+      });
+    });
+
+    // Also reveal on touchmove for better mobile experience
+    document.addEventListener('touchmove', e => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      const el = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (el) {
+        const gridItem = el.closest('.grid-item');
+        if (gridItem) {
+          gridItem.classList.add('revealed');
+          if (!revealed) triggerReveal();
+        }
+      }
+    }, { passive: true });
+  });
+
+  // Back to Home button click handler
+  backHomeBtn.addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+</script>
+
+</body>
+</html>

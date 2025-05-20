@@ -1,0 +1,388 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Times New Roman', serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#coffin-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* full screen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#coffin-image, #open-coffin {
+    position: absolute;
+    width: auto;
+    height: 80vh; /* or whatever size looks good */
+    object-fit: contain;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#coffin-image {
+    width: 50vw;
+    cursor: pointer;
+    transition: opacity 1s ease-in-out;
+}
+
+#story-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: auto;
+    text-align: center;
+}
+
+#open-coffin {
+    width: 100%;
+}
+
+#story-content {
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+}
+
+.story-section {
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0;
+}
+
+.story-section p {
+    color: rgba(255, 255, 255, 0.85); /* Slight see-through white */
+    font-size: 1.3rem;
+    font-family: 'Cinzel', serif; /* Or any Gothic / elegant font */
+    text-shadow: 0 0 5px #8b0000, 0 0 10px #000; /* Blood red glow with deep black */
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+}
+.story-section p {
+    animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+
+.story-section.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.next-btn {
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    align-self: center;
+}
+
+.ending {
+    text-align: center;
+    font-size: 1.4em;
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+#story-content {
+    position: absolute;
+    top: 50%;
+    left: 52.5%;
+    transform: translate(-50%, -50%);
+    width: 19%; /* 3/4 skinnier */
+    height: 50vh; /* Still shorter from the bottom */
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px;
+    border: 2px solid white;
+    box-shadow: 0 0 10px white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+@keyframes flyAcross {
+    0% { opacity: 0; transform: scale(0.8) rotate(0deg); }
+    10% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.2) rotate(15deg); }
+}
+
+.vampire {
+    position: fixed;
+    width: 100px;
+    height: auto;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#mist {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 180px;
+    background: red; /* Force visibility */
+    background-image: url("mist.png");
+    background-size: cover;
+    background-repeat: repeat-x;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 999;
+}
+
+
+/* If animation is breaking, remove it */
+@keyframes mistFlow {
+    0% { transform: translateX(-10%); }
+    100% { transform: translateX(10%); }
+}
+
+
+
+
+/* Flickering Light Effect */
+@keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+#coffin-container {
+    animation: flicker 3s infinite alternate ease-in-out;
+}
+
+/* Quick Shadow Figures */
+.shadow-figure {
+    position: fixed;
+    width: 120px;
+    height: auto;
+    opacity: 0.5;
+    pointer-events: none;
+    display: none;
+}
+
+.shadow-left {
+    left: -150px;
+    animation: shadowMoveLeft 1s forwards;
+}
+
+.shadow-right {
+    right: -150px;
+    animation: shadowMoveRight 1s forwards;
+}
+
+@keyframes shadowMoveLeft {
+    0% { left: -150px; opacity: 0; }
+    100% { left: 10px; opacity: 0.5; }
+}
+
+@keyframes shadowMoveRight {
+    0% { right: -150px; opacity: 0; }
+    100% { right: 10px; opacity: 0.5; }
+}
+
+/* Reaper Shadow */
+#reaper-shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('reaper.png') center center no-repeat;
+    background-size: contain;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    pointer-events: none;
+}
+#reaper-shadow.visible {
+    opacity: 1;
+}
+
+/* Blood Flash Effect */
+.blood-flash {
+    animation: bloodDrip 0.6s ease-in-out;
+}
+
+@keyframes bloodDrip {
+    0% { background-color: rgba(255, 0, 0, 0.5); }
+    100% { background-color: transparent; }
+}
+
+
+/* Glitch Effect */
+@keyframes glitch {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    75% { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+}
+
+.glitch-text {
+    animation: glitch 0.2s infinite;
+}
+
+/* Gentle Mist Roll at the End */
+.ending-mist {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 20vh;
+    background: url('mist.png') repeat-x;
+    opacity: 0;
+    animation: fadeInMist 5s forwards;
+}
+
+@keyframes fadeInMist {
+    0% { opacity: 0; }
+    100% { opacity: 0.6; }
+}
+.mist, .reaper, .shadow {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+}
+.mist {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background: url('mist.png') repeat-x;
+    background-size: cover;
+    opacity: 0.3;
+    animation: mistMove 30s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes mistMove {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 0; }
+}
+
+.glitch {
+    animation: glitch 0.3s linear 3;
+}
+
+@keyframes glitch {
+    0% { transform: translateX(0); }
+    33% { transform: translateX(-2px); }
+    66% { transform: translateX(2px); }
+    100% { transform: translateX(0); }
+}
+/* Flickering Light Effect */
+.flicker {
+    animation: flickerAnimation 3s infinite;
+}
+
+@keyframes flickerAnimation {
+    0%   { filter: brightness(1); }
+    5%   { filter: brightness(1.1); }
+    10%  { filter: brightness(0.9); }
+    15%  { filter: brightness(1.2); }
+    25%  { filter: brightness(0.95); }
+    30%  { filter: brightness(1.05); }
+    35%  { filter: brightness(0.85); }
+    50%  { filter: brightness(1.15); }
+    60%  { filter: brightness(0.9); }
+    70%  { filter: brightness(1); }
+    85%  { filter: brightness(1.2); }
+    100% { filter: brightness(1); }
+}
+/* Highlight text on hover */
+.story-text {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.story-text:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 200, 0.5);
+    transform: scale(1.01);
+}
+
+/* Left/Right Coffin Edge Click Zones */
+#coffin-container::before,
+#coffin-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 25%;
+    z-index: 10;
+    cursor: pointer;
+}
+
+#coffin-container::before {
+    left: 0;
+}
+
+#coffin-container::after {
+    right: 0;
+}
+@keyframes glowPulse {
+    0% { text-shadow: 0 0 10px rgba(255,255,200,0.3); }
+    50% { text-shadow: 0 0 20px rgba(255,255,220,0.6); }
+    100% { text-shadow: 0 0 10px rgba(255,255,200,0.3); }
+}
+
+.story-text:hover p {
+    animation: glowPulse 1.5s infinite;
+    color: #fdf6e3;
+}
+.click-clue {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    margin-top: 10px;
+    animation: flickerClue 2s infinite;
+    pointer-events: none;
+  }
+  
+  @keyframes flickerClue {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 0.3; transform: scale(1.03); }
+  }
+  .click-clue {
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+  }
+  .story-section .click-clue {
+    opacity: 1;
+    animation: flickerClue 2s infinite, fadeClue 6s forwards;
+  }
+  
+  @keyframes fadeClue {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+      

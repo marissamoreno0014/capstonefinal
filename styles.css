@@ -91,34 +91,40 @@ body {
     height: 100%;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap');
+
 .next-btn {
-    position: absolute;
-    left: 30px; /* closer to the section */
-    top: 130%;
-    transform: translateY(-50%);
-    
-    background: rgba(30, 30, 30, 0.85);
-    color: #fff;
-    border: 1px solid #a30053;
-    padding: 12px 22px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.9rem;
-    border-radius: 30px;
-    cursor: pointer;
+  position: absolute;
+  left: 30px; /* closer to the section */
+  top: 130%;  /* lower on screen */
+  transform: translateY(-50%);
+  text-orientation: mixed;
 
-    box-shadow: 0 0 8px rgba(163, 0, 83, 0.5);
-    transition: all 0.3s ease;
-    z-index: 100;
+  background: rgba(30, 30, 30, 0.85);
+  color: #fff;
+  border: 2px solid #a30053;
+  padding: 12px 22px;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  letter-spacing: 1px;
 
-    backdrop-filter: blur(6px);
+  box-shadow: 0 0 8px rgba(163, 0, 83, 0.5);
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  text-shadow: 1px 1px 3px black;
+  backdrop-filter: blur(6px);
 }
 
 .next-btn:hover {
-    background: rgba(163, 0, 83, 0.9);
-    color: #fff;
-    box-shadow: 0 0 14px rgba(255, 100, 180, 0.6);
-    transform: translateY(-50%) scale(1.05);
+  background: rgba(163, 0, 83, 0.9);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(255, 100, 180, 0.6);
+  transform: translateY(-50%) scale(1.05);
 }
+
 
 
 .ending {

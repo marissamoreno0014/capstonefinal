@@ -373,6 +373,7 @@ const trigger = () => {
   }
 };
 
+
 </script>
 <style>
   body {
@@ -395,13 +396,26 @@ const trigger = () => {
     position: absolute;
     width: 80px;  /* Increased size */
     height: 80px; /* Increased size */
-    background-image: url('hotspot.png');    
+    background-image: none;    
     border-radius: 50%;
     cursor: pointer;
     animation: pulse 2s infinite ease-in-out;
     opacity: 1;
   }
-  
+  .hotspot-wrong {
+  animation: glitchy 5s;
+  color: red;
+  text-shadow: 0 0 2px red, 0 0 5px crimson;
+}
+
+@keyframes glitchy {
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.1) rotate(1deg); }
+  50%  { transform: scale(0.95) rotate(-1deg); }
+  75%  { transform: scale(1.1) rotate(1deg); }
+  100% { transform: scale(1); }
+}
+
 /* General fragment styling */
 .fragment {
   color: white;

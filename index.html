@@ -330,6 +330,22 @@
         #mute-button:hover {
             background: #550000dd;
         }
+        #haunting-text {
+        position: absolute;
+        top: 8%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2em;
+        color: #ff4444;
+        font-family: 'Cinzel Decorative', serif;
+        text-shadow: 0 0 8px #660000;
+        z-index: 15;
+        pointer-events: none;
+        user-select: none;
+        white-space: nowrap;
+        opacity: 0.85;
+    }
+
     </style>
 </head>
 
@@ -343,6 +359,7 @@
                 <div id="shadow-flickers"></div>
 
                 <div id="reflections" aria-label="Site navigation options">
+                    <div id="haunting-text">Haunting Her</div>
 
                     <!-- Database of Short Stories -->
                     <div class="reflection" data-project="stories" tabindex="0" role="button"

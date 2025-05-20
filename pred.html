@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAYS CASE NO. 147: The Lesbian of Sweet Hollow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #0c0b09;
+      font-family: 'Special Elite', monospace;
+      color: #f1ede7;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+      animation: staticShift 0.5s infinite;
+    }
+
+    @keyframes staticShift {
+      0%, 100% { opacity: 0.03; }
+      50% { opacity: 0.05; }
+    }
+
+    .hays-banner {
+      background: repeating-linear-gradient(45deg, #5a1e1e, #5a1e1e 10px, #3a1414 10px, #3a1414 20px);
+      color: #fff8f1;
+      text-align: center;
+      padding: 0.8rem;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      font-weight: bold;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px #000;
+      animation: bannerDrop 1.4s ease-out forwards;
+    }
+
+    @keyframes bannerDrop {
+      0% { transform: translateY(-100%); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .spotlight {
+      position: fixed;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.2) 0%, transparent 70%);
+      box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.1);
+      pointer-events: none;
+      z-index: 2;
+      mix-blend-mode: screen;
+      border-radius: 50%;
+      transition: transform 0.05s linear;
+    }
+
+    .file {
+      max-width: 90vw;
+      margin: 4rem auto;
+      background: #1a1613;
+      border: 4px double #999;
+      box-shadow: 0 0 25px #000;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+      transform: scaleY(0);
+      transform-origin: top;
+      animation: openFile 1.5s ease-out forwards 2s;
+    }
+
+    @keyframes openFile {
+      to { transform: scaleY(1); }
+    }
+
+    h1 {
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 2.3rem;
+      color: #f2d6c2;
+      letter-spacing: 1px;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed #666;
+    }
+
+    .stamp {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #ff4444;
+      font-weight: bold;
+      transform: rotate(-10deg);
+      border: 2px solid #ff4444;
+      padding: 0.4rem 1rem;
+      margin: 1rem auto;
+      background: rgba(255, 0, 0, 0.12);
+      width: fit-content;
+      transition: transform 0.2s ease;
+    }
+
+    .stamp:hover {
+      transform: rotate(-4deg) scale(1.1);
+    }
+
+    .paragraph {
+      opacity: 0;
+      transform: translateY(15px);
+      animation: typeIn 0.6s ease-out forwards;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes typeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .redacted {
+      background: #111;
+      color: transparent;
+      transition: color 0.5s ease, text-shadow 0.5s;
+      padding: 0 5px;
+      display: inline-block;
+      text-shadow: none;
+    }
+
+    .redacted.revealed {
+      color: #ff4d4d;
+      text-shadow: 0 0 4px #ff4d4d;
+    }
+
+    .quote {
+      font-style: italic;
+      color: #c0a0a0;
+      border-left: 4px solid #aa4e4e;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.85rem;
+      margin-top: 2rem;
+      line-height: 1.4;
+      border-top: 1px dashed #444;
+      padding-top: 1rem;
+    }
+
+    .fingerprint {
+      position: absolute;
+      width: 100px;
+      opacity: 2;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+
+    .fp1 { top: 10px; left: 20px; transform: rotate(-10deg); }
+    .fp2 { top: 80px; right: 40px; transform: rotate(25deg); }
+    .fp3 { bottom: 60px; left: 30px; transform: rotate(-30deg); }
+    .fp4 { bottom: 20px; right: 50px; transform: rotate(10deg); }
+
+    #toggleRedaction {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      background: #5a1e1e;
+      color: #fff0e6;
+      border: none;
+      padding: 10px 16px;
+      font-family: 'Special Elite', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 4px;
+      box-shadow: 0 0 10px #000;
+      transition: background 0.3s;
+    }
+
+    #toggleRedaction:hover {
+      background: #7c2e2e;
+    }
+
+    .occult {
+      position: relative;
+      display: inline-block;
+      font-style: italic;
+      cursor: help;
+    }
+
+    .occult::after {
+      content: "⛧";
+      font-size: 0.9rem;
+      position: absolute;
+      left: 100%;
+      top: -0.2em;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      color: #bb4444;
+      animation: flickerSymbol 1.2s infinite alternate;
+      pointer-events: none;
+    }
+
+    .occult:hover::after {
+      opacity: 0.7;
+    }
+
+    @keyframes flickerSymbol {
+      0% { opacity: 0.1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.9; }
+    }
+
+    .home-button {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      font-family: 'Special Elite', monospace;
+      font-size: 0.85rem;
+      color: #ff4444;
+      background: rgba(90, 30, 30, 0.7);
+      padding: 6px 12px;
+      border: 2px double #ff4444;
+      border-radius: 4px;
+      text-decoration: none;
+      box-shadow: 0 0 8px #7c2e2e;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      z-index: 9999;
+      user-select: none;
+    }
+
+    .home-button:hover,
+    .home-button:focus {
+      background: #7c2e2e;
+      box-shadow: 0 0 15px #ff4444;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* ====== Responsive Styling ====== */
+    @media screen and (min-width: 1024px) and (max-width: 1366px) {
+    .file {
+    max-width: 600px;  /* or something narrower to fit iPad nicely */
+    margin: 4rem auto; /* auto left/right margin to center */
+    padding: 2rem;
+    transform-origin: top;
+    }
+}
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .file {
+        padding: 1.2rem;
+      }
+
+      .stamp {
+        font-size: 1rem;
+        padding: 0.3rem 0.8rem;
+      }
+
+      .fingerprint {
+        width: 70px;
+      }
+
+      #toggleRedaction,
+      .home-button {
+        font-size: 0.75rem;
+        padding: 8px 12px;
+      }
+
+      .spotlight {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .file {
+        margin: 2rem 1rem;
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .stamp {
+        font-size: 0.85rem;
+      }
+
+      .quote {
+        padding-left: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hays-banner">
+    ⚠️ CENSORED UNDER THE MOTION PICTURE PRODUCTION CODE — SECTION II, "SEXUAL PERVERSION"
+  </div>
+  <div class="spotlight" id="spotlight"></div>
+  <div class="blood"></div>
+
+  <div class="file">
+    <img src="finger.png" alt="fingerprint" class="fingerprint fp1" />
+    <img src="finger.png" alt="fingerprint" class="fingerprint fp2" />
+    <img src="finger.png" alt="fingerprint" class="fingerprint fp3" />
+    <img src="finger.png" alt="fingerprint" class="fingerprint fp4" />
+
+    <h1>Hays Case No. 147<br>The Lesbian of Sweet Hollow</h1>
+    <div class="stamp">FORBIDDEN</div>
+
+    <p class="paragraph" style="--delay: 2.3s;">
+      The town feared one thing above all: <span class="redacted">The Lesbian</span>.
+    </p>
+    <p class="paragraph" style="--delay: 2.6s;">
+      Not a person—an <span class="redacted">unnatural desire</span>. A creeping shadow in the form of a woman with glasses, slacks, and literary <span class="occult">opinions</span>.
+    </p>
+    <p class="paragraph" style="--delay: 2.9s;">
+      Ms. Margo ran the bookstore. She once complimented a married woman’s haircut. The victim hasn’t been seen since.
+    </p>
+    <p class="paragraph" style="--delay: 3.2s;">
+      When cheer captain Kelly disappeared, the town reached for their <span class="redacted">Lesbian Eradication Bibles™</span> and <span class="occult">holy water</span>.
+    </p>
+    <p class="paragraph quote" style="--delay: 3.5s;">
+      “I didn’t kidnap Kelly,” Margo sighed. “She ran because this town is—”
+    </p>
+    <p class="paragraph" style="--delay: 3.8s;">
+      Kelly burst in. “I kissed Ashley. I ran away because you’re all insane.”
+    </p>
+    <p class="paragraph" style="--delay: 4.1s;">
+      The town gasped. Then someone screamed, “She got Kelly too!”
+    </p>
+    <p class="paragraph" style="--delay: 4.4s;">
+      The mob dragged Margo away. Kelly and Ashley vanished into the night, headed for a place where <span class="redacted">love didn’t require an exorcism</span> — only <span class="occult">freedom</span>.
+    </p>
+
+    <div class="footer">
+      CONFIDENTIAL — Sealed Under the Motion Picture Production Code, 1953<br>
+      Reel 1953 · Entry 147A · Deemed <em>“Psychosexual Horror”</em><br>
+      Evidence of Moral Deviation — Not Approved for Public Exhibition
+    </div>
+  </div>
+
+  <!-- Toggle Button -->
+  <button id="toggleRedaction" onclick="toggleRedaction()">☣️ Reveal Redacted</button>
+
+  <script>
+    const spotlight = document.getElementById("spotlight");
+    const secrets = document.querySelectorAll(".redacted");
+    const toggleButton = document.getElementById("toggleRedaction");
+  
+    let spotlightEnabled = true;
+  
+    document.addEventListener("mousemove", (e) => {
+      const centerX = e.pageX;
+      const centerY = e.pageY;
+  
+      if (spotlightEnabled) {
+        spotlight.style.transform = `translate(${centerX - 80}px, ${centerY - 80}px)`;
+        spotlight.style.display = "block";
+        document.body.style.cursor = "none";
+  
+        secrets.forEach(secret => {
+          const rect = secret.getBoundingClientRect();
+          const midX = window.scrollX + rect.left + rect.width / 2;
+          const midY = window.scrollY + rect.top + rect.height / 2;
+  
+          const dx = centerX - midX;
+          const dy = centerY - midY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+  
+          if (distance < 80) {
+            secret.classList.add("revealed");
+          } else {
+            secret.classList.remove("revealed");
+          }
+        });
+      }
+    });
+  
+    toggleButton.addEventListener("mouseenter", () => {
+      spotlightEnabled = false;
+      spotlight.style.display = "none";
+      document.body.style.cursor = "default";
+    });
+  
+    toggleButton.addEventListener("mouseleave", () => {
+      spotlightEnabled = true;
+      spotlight.style.display = "block";
+      document.body.style.cursor = "none";
+    });
+  
+    function toggleRedaction() {
+      document.querySelectorAll('.redacted').forEach(el => {
+        el.classList.toggle('revealed');
+      });
+    }
+  </script>
+  
+<a href="index.html" class="home-button" aria-label="Home">&#8962; Home</a>
+
+  
+</body>
+</html>

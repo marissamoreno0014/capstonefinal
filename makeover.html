@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>The Cursed Tale of Jess</title>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="hotspot-container"></div>
+  <audio id="ambient" src="ambient.mp3" autoplay loop></audio>
+  <audio id="heartbeat" src="heartbeat.mp3" preload="auto"></audio>
+  <audio id="whisper1" src="whisper.mp3" preload="auto"></audio>
+  <audio id="glitch" src="glitch.mp3" preload="auto"></audio>
+  <audio id="breathing" src="breathing.mp3" preload="auto"></audio>
+  <audio id="loud_static" src="static.mp3" preload="auto"></audio>
+  <a href="index.html" class="back-button" title="Back to Home">Home</a>
+
+</body>
+<script>
+  const usedPositions = [];
+const MIN_DISTANCE = 150; // Minimum distance in pixels between fragments/hotspots
+function isFarEnough(x, y) {
+  return usedPositions.every(pos => {
+    const dx = pos.x - x;
+    const dy = pos.y - y;
+    return Math.sqrt(dx * dx + dy * dy) >= MIN_DISTANCE;
+  });
+}
+
+const fragments = [
+  "Jess was a tomboy, all scraped knees and leather jackets.",
+  "The village whispered — not just about her clothes, but her gaze lingering too long on Sarah.",
+  "They called her names. Words meant to shame.",
+  "One day, the makeover spell came, slinking through the cracks like perfume smoke.",
+  "A pink dress slithered up her legs. Lipstick stained a mouth that never smiled for boys.",
+  "She smirked at Chad. Not hers, but someone else’s smirk.",
+  "A mirror cracked. A girl stared back — someone softer, someone trapped.",
+  "Scissors sliced fabric. Spells broke. Truth screamed.",
+  "In the distance, a filmmaker panicked. The script had stuttered.",
+  "Jess, no longer just a girl, no longer anyone's rewrite, stepped into legend."
+];
+
+// Mapping based on your custom order
+const mapping = [0, 2, 4, 9, 3, 6, 8, 1, 5, 7];
+
+let revealedFragments = 0;
+
+function createHotspots() {
+  const container = document.getElementById("hotspot-container");
+
+  for (let i = 0; i < fragments.length; i++) {
+    const hotspot = document.createElement("div");
+    hotspot.classList.add("hotspot");
+
+    let x, y, attempts = 0;
+    do {
+      x = 10 + Math.random() * 80; // vw
+      y = 10 + Math.random() * 80; // vh
+      attempts++;
+      if (attempts > 100) break;
+    } while (!isFarEnough(x, y));
+
+    usedPositions.push({ x, y });
+
+    hotspot.style.left = `${x}vw`;
+    hotspot.style.top = `${y}vh`;
+
+    hotspot.dataset.index = i;
+
+    // Handle both desktop hover and mobile touch
+    const trigger = () => {
+      if (parseInt(hotspot.dataset.index) === getRequiredHotspotIndex(revealedFragments)) {
+        revealFragment(revealedFragments);
+        triggerHint(mapping[revealedFragments], hotspot);
+        hotspot.remove();
+      }
+    };
+
+    hotspot.addEventListener("mouseenter", trigger);
+    hotspot.addEventListener("touchstart", trigger, { passive: true });
+
+    container.appendChild(hotspot);
+  }
+}
+
+
+function getRequiredHotspotIndex(fragmentIndex) {
+  return mapping[fragmentIndex];
+}
+
+function createHotspots() {
+  const container = document.getElementById("hotspot-container");
+
+  for (let i = 0; i < fragments.length; i++) {
+    const hotspot = document.createElement("div");
+    hotspot.classList.add("hotspot");
+
+    let x, y, attempts = 0;
+    do {
+      x = 10 + Math.random() * 80; // vw
+      y = 10 + Math.random() * 80; // vh
+      attempts++;
+      if (attempts > 100) break; // fail-safe to prevent infinite loop
+    } while (!isFarEnough(x, y));
+
+    // Store in used positions for future distance checks
+    usedPositions.push({ x, y });
+
+    hotspot.style.left = `${x}vw`;
+    hotspot.style.top = `${y}vh`;
+
+    hotspot.dataset.index = i;
+
+    hotspot.addEventListener("mouseenter", () => {
+      if (parseInt(hotspot.dataset.index) === getRequiredHotspotIndex(revealedFragments)) {
+        revealFragment(revealedFragments);
+        triggerHint(mapping[revealedFragments], hotspot);
+        hotspot.remove();
+      }
+    });
+
+    container.appendChild(hotspot);
+  }
+}
+
+function revealFragment(index) {
+  const frag = document.createElement("div");
+  frag.classList.add("fragment");
+  frag.id = `fragment-${index}`;
+  frag.innerText = fragments[index];
+
+  const container = document.getElementById("hotspot-container");
+
+  const realHotspotIndex = getRequiredHotspotIndex(index);
+  const hotspot = document.querySelector(`.hotspot[data-index='${realHotspotIndex}']`);
+  const rect = hotspot.getBoundingClientRect();
+
+  const fragWidth = 300;
+  const fragHeight = 100;
+
+  let top = rect.top + window.scrollY - 20;
+  let left = rect.left + window.scrollX + 50;
+
+  // Clamp to screen bounds
+  const maxX = window.innerWidth - fragWidth - 10;
+  const maxY = window.innerHeight - fragHeight - 10;
+  left = Math.min(Math.max(left, 10), maxX);
+  top = Math.min(Math.max(top, 10), maxY);
+
+  frag.style.position = "absolute";
+  frag.style.top = `${top}px`;
+  frag.style.left = `${left}px`;
+  frag.style.maxWidth = `${fragWidth}px`;
+
+  switch (index) {
+    case 0:
+      frag.classList.add("shake");
+      document.body.style.background = "#111";
+      break;
+    case 1:
+      frag.classList.add("fade-in");
+      document.body.classList.add("fog");
+      break;
+    case 2:
+      frag.classList.add("red-flash");
+      document.body.classList.add("red-flash-bg");
+      break;
+    case 3:
+      frag.classList.add("flowing");
+      break;
+    case 4:
+      frag.classList.add("crawling");
+      break;
+    case 5:
+      frag.classList.add("fade-in");
+      break;
+    case 6:
+      frag.classList.add("fade-in");
+      document.body.classList.add("crack");
+      break;
+    case 7:
+      frag.classList.add("shake");
+      break;
+    case 8:
+      frag.classList.add("glitch");
+      document.body.classList.add("glitch-bg");
+      break;
+    case 9:
+      frag.classList.add("glow");
+      document.body.style.background = "#222";
+      break;
+  }
+
+  setTimeout(() => {
+    frag.style.display = 'block';
+    container.appendChild(frag);
+    revealedFragments++;
+
+    setTimeout(() => {
+      frag.classList.add('disappearing');
+      setTimeout(() => {
+        frag.remove();
+      }, 1000);
+    }, 30000);
+  }, 100);
+}
+
+
+
+
+// Flashlight effect
+const flashlight = document.createElement("div");
+flashlight.classList.add("flashlight");
+document.body.appendChild(flashlight);
+
+document.addEventListener("mousemove", (e) => {
+  flashlight.style.left = `${e.pageX}px`;
+  flashlight.style.top = `${e.pageY}px`;
+});
+document.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+});
+
+// Hints functions
+function triggerHint(hintType, hotspot) {
+  switch (hintType) {
+    case 0:
+      playHeartbeat(hotspot);
+      break;
+    case 1:
+      playWhisper(hotspot);
+      break;
+    case 2:
+      showMist(hotspot);
+      break;
+    case 3:
+      showGlitch(hotspot);
+      break;
+    case 4:
+      playBreathing(hotspot);
+      break;
+    case 5:
+      flashEyes(hotspot);
+      break;
+    case 6:
+      playWhisper2(hotspot);
+      break;
+    case 7:
+      flickerText(hotspot);
+      break;
+    case 8:
+      playFasterHeartbeat(hotspot);
+      break;
+    case 9:
+      showStaticNoise(hotspot);
+      break;
+  }
+}
+
+function playHeartbeat(hotspot) {
+  const audio = new Audio('heartbeat.mp3');
+  audio.play();
+}
+
+function playWhisper(hotspot) {
+  const audio = new Audio('whisper.mp3');
+  audio.play();
+}
+
+function showMist(hotspot) {
+  const mist = document.createElement("div");
+  mist.style.position = "absolute";
+  mist.style.top = `${hotspot.offsetTop}px`;
+  mist.style.left = `${hotspot.offsetLeft}px`;
+  mist.style.width = "100px";
+  mist.style.height = "100px";
+  mist.style.background = "rgba(255, 255, 255, 0.2)";
+  mist.style.borderRadius = "50%";
+  document.body.appendChild(mist);
+
+  setTimeout(() => {
+    mist.style.opacity = "0";
+  }, 1000);
+}
+
+function showGlitch(hotspot) {
+  document.body.classList.add("glitch");
+  setTimeout(() => {
+    document.body.classList.remove("glitch");
+  }, 500);
+}
+
+function playBreathing(hotspot) {
+  const audio = new Audio('breathing.mp3');
+  audio.play();
+}
+
+function flashEye(event) {
+  const eye = document.createElement("img");
+  eye.src = "eye.png"; // Your horror eye image
+  eye.classList.add("eye-flash");
+
+  const offsetX = (Math.random() - 0.5) * 100; 
+  const offsetY = (Math.random() - 0.5) * 100;
+
+  eye.style.left = `${event.pageX + offsetX}px`;
+  eye.style.top = `${event.pageY + offsetY}px`;
+
+  // Error fallback if image doesn't load
+  eye.onerror = () => {
+    const fallbackEye = document.createElement("div");
+    fallbackEye.style.position = "absolute";
+    fallbackEye.style.width = "30px";
+    fallbackEye.style.height = "30px";
+    fallbackEye.style.borderRadius = "50%";
+    fallbackEye.style.backgroundColor = "white";
+    fallbackEye.style.left = `${event.pageX + offsetX}px`;
+    fallbackEye.style.top = `${event.pageY + offsetY}px`;
+    fallbackEye.style.zIndex = 1000;
+    document.body.appendChild(fallbackEye);
+
+    setTimeout(() => {
+      fallbackEye.style.backgroundColor = "transparent";
+    }, 300);
+
+    setTimeout(() => {
+      fallbackEye.remove();
+    }, 800);
+  };
+
+  document.body.appendChild(eye);
+
+  setTimeout(() => {
+    eye.style.opacity = 1;
+  }, 50);
+
+  setTimeout(() => {
+    eye.style.opacity = 0;
+  }, 600);
+
+  setTimeout(() => {
+    eye.remove();
+  }, 900);
+}
+
+
+function playWhisper2(hotspot) {
+  const audio = new Audio('whisper.mp3'); //add whisper two
+  audio.play();
+}
+
+function flickerText(hotspot) {
+  const frag = document.getElementById(`fragment-${hotspot.dataset.index}`);
+  frag.classList.add("flicker");
+}
+
+function playFasterHeartbeat(hotspot) {
+  const audio = new Audio('heartbeat.mp3');//heartbeat fast add
+  audio.play();
+}
+
+function showStaticNoise(hotspot) {
+  const audio = new Audio('static.mp3');
+  audio.play();
+}
+
+createHotspots();
+
+</script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #0b0b0b;
+    font-family: 'IM Fell English SC', serif;
+    overflow: hidden;
+    color: white;
+    cursor: none;
+  }
+  
+  #hotspot-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .hotspot {
+    position: absolute;
+    width: 80px;  /* Increased size */
+    height: 80px; /* Increased size */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    animation: pulse 2s infinite ease-in-out;
+    opacity: 1;
+  }
+  
+/* General fragment styling */
+.fragment {
+  color: white;
+  font-size: 1.4em;
+  font-family: 'Cinzel', serif;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: center;
+  position: absolute;
+  display: none;
+  max-width: 300px;
+  line-height: 1.5;
+  transition: all 0.5s ease;
+}
+
+.shake {
+  animation: intense-shake 0.8s ease-in-out infinite;
+}
+
+@keyframes intense-shake {
+  0% { transform: translate(0px, 0px) rotate(0deg); }
+  10% { transform: translate(-8px, 2px) rotate(-2deg); }
+  20% { transform: translate(6px, -4px) rotate(2deg); }
+  30% { transform: translate(-10px, 6px) rotate(-3deg); }
+  40% { transform: translate(8px, -2px) rotate(3deg); }
+  50% { transform: translate(-6px, 4px) rotate(-2deg); }
+  60% { transform: translate(10px, -6px) rotate(2deg); }
+  70% { transform: translate(-4px, 8px) rotate(-1deg); }
+  80% { transform: translate(6px, -4px) rotate(1deg); }
+  90% { transform: translate(-8px, 2px) rotate(-2deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+
+
+.fade-in {
+  animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.red-flash {
+  color: #ff4d4d;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { color: #ff4d4d; }
+  50% { color: #ffffff; }
+  100% { color: #ff4d4d; }
+}
+
+.flowing {
+  animation: flowingText 3s infinite alternate;
+}
+
+@keyframes flowingText {
+  0% { letter-spacing: 1px; }
+  100% { letter-spacing: 5px; }
+}
+
+.crawling {
+  animation: crawlUp .2s forwards;
+}
+
+@keyframes crawlUp {
+  0% { transform: translateY(50px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.glitch {
+  animation: glitchEffect 0.3s infinite;
+  filter: contrast(200%) brightness(150%);
+}
+
+@keyframes glitchEffect {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-2px, 2px); }
+  40%  { transform: translate(2px, -2px); }
+  60%  { transform: translate(-3px, 3px); }
+  80%  { transform: translate(3px, -3px); }
+  100% { transform: translate(0); }
+}
+
+.glow {
+  animation: intenseGlow 1s infinite alternate;
+  text-shadow: 0 0 10px #ff00cc, 0 0 20px #ff00cc, 0 0 30px #ff00cc;
+  color: white;
+}
+
+@keyframes intenseGlow {
+  0% { text-shadow: 0 0 10px #ff00cc; }
+  100% { text-shadow: 0 0 30px #ff00cc, 0 0 60px #ff00cc; }
+}
+
+
+/* Light fog background effect */
+.fog {
+  background: url('fog.png') center center / cover no-repeat fixed;
+}
+
+/* Red flash background */
+.red-flash-bg {
+  background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, rgba(0,0,0,1) 70%);
+}
+
+/* Mirror crack background */
+.crack {
+  background: url('crack.png') center center / cover no-repeat fixed;
+}
+
+/* Glitch background */
+.glitch-bg {
+  background: url('glitch.gif') center center / cover no-repeat fixed;
+}
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  
+/* Effects: heartbeat, whispers, etc. */
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Flicker effect for text */
+.flicker {
+  animation: flickerAnim 0.15s infinite alternate;
+}
+
+@keyframes flickerAnim {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* Improved Flashlight effect */
+.flashlight {
+  position: fixed;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.95) 70%);
+  pointer-events: none;
+  mix-blend-mode: lighten;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1000;
+}
+.glitch {
+  animation: glitch-animation 0.1s infinite;
+}
+
+@keyframes glitch-animation {
+  0% { transform: translate(2px, 0); }
+  50% { transform: translate(-2px, 0); }
+  100% { transform: translate(2px, 0); }
+}
+
+.mist {
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  animation: mist-effect 3s ease-in-out infinite;
+}
+
+@keyframes mist-effect {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.5); }
+}
+
+.flicker {
+  animation: flicker 0.3s linear infinite;
+}
+
+.static {
+  background: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  animation: static-effect 1s infinite;
+}
+
+@keyframes static-effect {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.3; }
+}
+
+.eye-flash {
+  position: absolute;
+  width: 100px;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 1000;
+}
+
+
+@keyframes eye-flash {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+.breathing {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  animation: breathing-effect 3s ease-in-out infinite;
+}
+
+@keyframes breathing-effect {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 0.6; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+.fragment {
+  transition: opacity 1s ease-in-out;
+}
+
+.fragment.disappearing {
+  opacity: 0;
+}
+.back-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 8px 14px;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  background-color: rgba(30, 30, 30, 0.8);
+  color: #f0f0f0;
+  border-radius: 4px;
+  text-decoration: none;
+  z-index: 1000;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(80, 80, 80, 0.9);
+}
+
+
+</style>
+</html>

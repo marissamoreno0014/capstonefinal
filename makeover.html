@@ -19,7 +19,7 @@
 </body>
 <script>
   const usedPositions = [];
-const MIN_DISTANCE = 150; // Minimum distance in pixels between fragments/hotspots
+const MIN_DISTANCE = 150; 
 function isFarEnough(x, y) {
   return usedPositions.every(pos => {
     const dx = pos.x - x;
@@ -29,17 +29,18 @@ function isFarEnough(x, y) {
 }
 
 const fragments = [
-  "Jess was a tomboy, all scraped knees and leather jackets.",
-  "The village whispered — not just about her clothes, but her gaze lingering too long on Sarah.",
-  "They called her names. Words meant to shame.",
-  "One day, the makeover spell came, slinking through the cracks like perfume smoke.",
-  "A pink dress slithered up her legs. Lipstick stained a mouth that never smiled for boys.",
-  "She smirked at Chad. Not hers, but someone else’s smirk.",
-  "A mirror cracked. A girl stared back — someone softer, someone trapped.",
-  "Scissors sliced fabric. Spells broke. Truth screamed.",
+  "Jess was your typical tomboy — short hair, ripped jeans, and plaid shirts.",
+  "But the village whispered not just about her clothes but about the way her gaze lingered too long on Sarah.",
+  "They called her names. Words meant to shame, tuck her away, and change her ‘ways.’",
+  "Then one day, the makeover curse arrived, sent by the village’s holy figure, cloaked in good intentions.",
+  "A pink dress slithered up her legs like a second skin. Lipstick stained lips that never sought boys.",
+  "The curse took over she smirked at Chad. Not her smirk, but someone else’s.The curse whispered that liking boys would fix her but it only broke her.",
+  "A mirror cracked. A girl stared back softer, trapped.",
+  "Scissors sliced fabric. Curses broke. Truth returned.",
   "In the distance, a filmmaker panicked. The script had stuttered.",
-  "Jess, no longer just a girl, no longer anyone's rewrite, stepped into legend."
+  "Jess, no longer just a girl, no longer anyone’s rewrite, forged her own way."
 ];
+
 
 // Mapping based on your custom order
 const emojis = ["🧒", "👁️", "🔇", "🌫️", "💄", "😏", "🪞", "✂️", "📜🔥", "🌟"];
@@ -48,9 +49,7 @@ const mapping = [0, 2, 4, 9, 3, 6, 8, 1, 5, 7];
 let revealedFragments = 0;
 
 function isFarEnough(x, y) {
-  // Your existing distance checking function for positioning hotspots
-  // Return true if new position is far enough from existing ones, else false
-  const minDistance = 10; // in vw/vh units or adapt as needed
+  const minDistance = 10; 
   for (const pos of usedPositions) {
     const dx = pos.x - x;
     const dy = pos.y - y;
@@ -359,6 +358,20 @@ function showStaticNoise(hotspot) {
 }
 
 createHotspots();
+const trigger = () => {
+  const correct = parseInt(hotspot.dataset.index) === getRequiredHotspotIndex(revealedFragments);
+  if (correct) {
+    revealFragment(revealedFragments);
+    triggerHint(mapping[revealedFragments], hotspot);
+    hotspot.remove();
+  } else {
+    // ✨ Wrong tap feedback
+    hotspot.classList.add("hotspot-wrong");
+    setTimeout(() => {
+      hotspot.classList.remove("hotspot-wrong");
+    }, 500);
+  }
+};
 
 </script>
 <style>
@@ -646,6 +659,31 @@ createHotspots();
 .back-button:hover {
   background-color: rgba(80, 80, 80, 0.9);
 }
+#story-hint {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Cinzel', serif; /* Gothic or mythic font */
+  font-size: 1.2rem;
+  text-align: center;
+  opacity: 0;
+  animation: fadeFlicker 6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes fadeFlicker {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  30% { opacity: 0.8; }
+  40% { opacity: 1; }
+  50% { opacity: 0.7; }
+  60% { opacity: 0.3; }
+  70% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
 
 
 </style>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scream Experience</title>
+</head>
+<body>
+ <div id="bg-creep"></div>
+ <img id="background-image" src="option1.png" alt="background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;" />
+
+  <!-- START EXPERIENCE SCREEN -->
+  <div id="start-screen">
+    <button id="start-btn">Start Experience</button>
+    <a href="index.html" id="return-btn">Back To Homepage</a>
+  </div>
+
+  <!-- Static Noise -->
+  <audio id="static-sound" src="static.mp3" loop></audio>
+
+
+  <!-- DO YOU LIKE SCARY MOVIES? -->
+  <div id="scary-movie-prompt" style="display: none;">DO YOU LIKE SCARY MOVIES?</div>
+  <audio id="scary-movie-audio" src="scarymovies.mp3"></audio>
+  <a href="index.html" id="return-btn">Back To Homepage</a>
+
+  <!-- Jumpscare -->
+  <div id="jumpscare">
+    <img src="ghostface.png" alt="Ghostface" />
+    <audio id="scream-sound" src="jumpscareaudio.mp3"></audio>
+  </div>
+
+  <!-- TV EXPERIENCE -->
+  <div id="tv-experience">
+    <div id="vhs-menu">
+      <button class="vhs-btn" onclick="playClip(0)">Tape 1</button>
+      <button class="vhs-btn" onclick="playClip(1)">Tape 2</button>
+      <button class="vhs-btn" onclick="playClip(2)">Tape 3</button>
+      <button class="vhs-btn" onclick="playClip(3)">Tape 4</button>
+    </div>
+
+    <div id="tv-container">
+      <video id="tv-video" autoplay loop></video>
+      <div id="visual-cue"></div>
+    </div>
+    <a href="reveal.html" id="reveal-loss-btn">Reveal What We Lost</a>
+  </section>
+
+  <!-- What We Lost Fullscreen Section -->
+  <section id="what-we-lost">
+      <h1>What We Lost</h1>
+      <p class="final-text">
+        <em>Scream 5</em> chose to erase a female queer relationship not out of narrative necessity, but fear of backlash of improper representation. Amber and Tara’s bond was rewritten from lovers to friends, silencing what could’ve been a haunting, powerful story of betrayal and heartbreak.
+      </p>
+      <p class="final-text">
+        Queer women deserve complexity even if it means being the killer. When straight couples can be both villains and victims (like Billy and Sidney in <em>Scream</em>), why are queer women denied the same depth?
+      </p>
+      <p class="final-text">
+        By discarding the original script, the film lost its edge. Real representation means showing all sides even the monstrous. To censor is not to protect, but to dilute. We didn’t need safety. We needed truth.
+      </p>
+      <div class="knife-tear-overlay"></div>
+</section>
+<style>
+  body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: black;
+}
+
+#bg-creep {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("option1.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: -2;
+  animation: creepyMove 10s infinite ease-in-out alternate;
+  animation-delay: 1s;
+  transform-origin: center;
+}
+
+  #scary-movie-prompt {
+    position: fixed;
+    top: 10%;
+    left: 5%;
+    font-size: 3rem;
+    color: red;
+    text-shadow: 2px 2px 10px black;
+    z-index: 999;
+    display: none;
+  }
+  
+  #jumpscare {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  #jumpscare img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  #tv-experience {
+      width: auto;
+      height: auto;
+      max-width: 100%; 
+      max-height: 100%;
+      display: block;
+        
+  }
+  
+  
+  #vhs-menu {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .vhs-btn {
+    background: rgba(0,0,0,0.7);
+    color: cyan;
+    border: 2px solid cyan;
+    margin: 5px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px cyan;
+  }
+  .vhs-btn:hover {
+    background-color: grey;
+    color: cyan;
+    box-shadow: 0 0 10px white;
+  }
+  
+  #tv-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 150px;
+    max-width: 90%;
+    width: 640px;
+    background: black;
+    border: 12px solid #1e1e1e;
+    box-shadow: 0 0 50px rgba(0, 200, 255, 0.5);
+  }
+  
+  
+  #tv-container video {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    
+    
+  }
+  
+  #visual-cue {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  #what-we-lost {
+    position: relative;
+    background: #000;
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    font-family: 'Cinzel', serif; 
+  }
+  
+  .final-text {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    max-width: 800px;
+    margin: 1rem auto;
+    text-shadow: 0 0 8px red;
+  }
+  
+  #what-we-lost h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    color: crimson;
+    text-shadow: 0 0 15px red;
+  }
+  #reveal-loss-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999;
+    padding: 12px 20px;
+    background: crimson;
+    color: white;
+    text-decoration: none;
+    border: 2px solid white;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px red;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 10px red; }
+    50% { box-shadow: 0 0 20px white; }
+    100% { box-shadow: 0 0 10px red; }
+  }
+  
+  #reveal-loss-btn:hover {
+    background: white;
+    color: crimson;
+  }
+  
+  section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  
+  #what-we-lost {
+    opacity: 0;
+    pointer-events: none;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #what-we-lost.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+  }
+  .knife-tear-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('knifetear.jpg') no-repeat center center;
+    background-size: cover;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.9;
+    mix-blend-mode: multiply;
+  }  
+  
+  #start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle, #001122, #000000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  #start-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #start-btn {
+    font-size: 2rem;
+    padding: 20px 40px;
+    background: black;
+    color: red;
+    border: 3px solid red;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  #tv-experience,
+  #jumpscare,
+  #what-we-lost,
+  #scary-movie-prompt {
+    display: none;
+  }
+  #return-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 18px;
+    background: rgba(0, 0, 0, 0.8);
+    color: crimson;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    border: 2px solid crimson;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px crimson;
+  }
+  
+  #return-btn:hover {
+    background: crimson;
+    color: black;
+    box-shadow: 0 0 15px red;
+  }
+  
+</style> 
+<script>
+  const startBtn = document.getElementById("start-btn");
+const startScreen = document.getElementById("start-screen");
+const prompt = document.getElementById("scary-movie-prompt");
+const scaryAudio = document.getElementById("scary-movie-audio");
+const staticAudio = document.getElementById("static-sound");
+const jumpscare = document.getElementById("jumpscare");
+const scream = document.getElementById("scream-sound");
+const tvExperience = document.getElementById("tv-experience");
+const tvVideo = document.getElementById("tv-video");
+const ambient = document.getElementById("ambient-sound");
+const visualCue = document.getElementById("visual-cue");
+const whatWeLost = document.getElementById("what-we-lost");
+const revealBtn = document.getElementById("reveal-loss-btn");
+
+let currentClipIndex = 0;
+
+const clips = [
+  {
+    src: "clip1.mp4",
+    ambient: "heartbeat.mp3",
+    cue: "HELP HER",
+    original: "Tara begs to protect her girlfriend. Her hand trembles.",
+    movie: "Tara agrees to help... for her best friend.",
+  },
+  {
+    src: "clip2.mp4",
+    ambient: "staticrise.mp3",
+    cue: "She’s MINE",
+    original: "Amber brushes Tara’s hair back: 'I can’t lose you.'",
+    movie: "Amber helps Tara calm down as a best friend.",
+  },
+  {
+    src: "clip3.mp4",
+    ambient: "glitch.mp3",
+    cue: "Betrayal burns",
+    original: "Tara’s eyes shatter: Amber, her love, betrayed her.",
+    movie: "Tara’s friend is the killer.",
+  },
+  {
+    src: "clip4.mp4",
+    ambient: "mist.mp3",
+    cue: "Vengeance bleeds",
+    original: "Tara stabs Amber: 'You never loved me.'",
+    movie: "Tara stabs Amber, no extra weight.",
+  },
+];
+
+startBtn.addEventListener("click", () => {
+  startScreen.style.display = "none";
+  staticAudio.play();
+
+  // Wait 5 seconds before showing prompt
+  setTimeout(() => {
+    // Pause static and play "DO YOU LIKE SCARY MOVIES?" audio
+    staticAudio.pause();
+    staticAudio.currentTime = 0;
+
+    prompt.style.display = "block";
+    scaryAudio.play();
+
+    scaryAudio.onended = () => {
+      // Keep prompt visible and resume static
+      staticAudio.play();
+
+      // After 4 seconds of static, then jumpscare
+      setTimeout(() => {
+        prompt.style.display = "none";
+        jumpscare.style.display = "flex";
+        scream.play();
+
+        setTimeout(() => {
+          jumpscare.style.display = "none";
+          tvExperience.style.display = "flex";
+          playClip(0);
+        }, 3000); // jumpscare duration
+      }, 4000); // static duration after scary audio
+    };
+  }, 5000); // initial delay before prompt
+});
+
+
+
+function showScript(type) {
+  originalScript.style.display = type === "original" ? "block" : "none";
+  movieScript.style.display = type === "movie" ? "block" : "none";
+}
+
+function playClip(index) {
+  currentClipIndex = index;
+  const clip = clips[index];
+
+  tvVideo.src = clip.src;
+  tvVideo.play();
+  ambient.src = clip.ambient;
+  ambient.play();
+
+  // Remove all special classes first
+  const cueTextDiv = visualCue.querySelector('.cue-text');
+  if (cueTextDiv) {
+    cueTextDiv.classList.remove('clip1', 'clip2', 'clip3', 'clip4');
+  }
+  originalScript.classList.remove('clip1-text', 'clip2-text', 'clip3-text', 'clip4-text');
+  movieScript.classList.remove('clip1-text', 'clip2-text', 'clip3-text', 'clip4-text');
+
+  // Set cue text with class for white color
+  visualCue.innerHTML = `<div class="cue-text clip${index + 1}">${clip.cue}</div>`;
+
+  // Add white color classes to scripts
+  originalScript.classList.add(`clip${index + 1}-text`);
+  movieScript.classList.add(`clip${index + 1}-text`);
+
+  originalScript.innerText = clip.original;
+  movieScript.innerText = clip.movie;
+  showScript("original");
+
+  // Auto transition after final clip
+  if (index === clips.length - 1) {
+    setTimeout(() => {
+      tvExperience.style.display = "none";
+      whatWeLost.style.display = "block";
+    }, 15000);
+  }
+}
+
+
+const bgImage = document.getElementById('background-image'); // Your img element
+let creepInterval;
+let startTime = null;
+
+function creepyMove(timestamp) {
+  if (!startTime) startTime = timestamp;
+  const elapsed = (timestamp - startTime) / 1000; // seconds
+
+  // Slow smooth oscillation with sin wave
+  const xDrift = Math.sin(elapsed * 0.7) * 10; // 10px left-right
+  const yDrift = Math.cos(elapsed * 0.5) * 8;  // 8px up-down
+
+  // Random jitter every frame (small, quick shakes)
+  const jitterX = (Math.random() - 0.5) * 2; // ±1px jitter
+  const jitterY = (Math.random() - 0.5) * 2;
+
+  // Slight scale flicker between 0.98 and 1.02
+  const scale = 1 + Math.sin(elapsed * 3) * 0.02;
+
+  bgImage.style.transform = `translate(${xDrift + jitterX}px, ${yDrift + jitterY}px) scale(${scale.toFixed(3)})`;
+
+  creepInterval = requestAnimationFrame(creepyMove);
+}
+
+// Start the creepy movement after 1 second
+setTimeout(() => {
+  creepInterval = requestAnimationFrame(creepyMove);
+}, 1000);
+function pauseStaticIfNeeded() {
+  staticAudio.pause();
+  staticAudio.currentTime = 0;
+}
+
+function resumeStaticIfSafe() {
+  // Resume only if not during jumpscare or video playing
+  if (jumpscareIsActive === false && tvVideo.paused) {
+    staticAudio.play();
+  }
+}
+
+let jumpscareIsActive = false;
+
+function showScaryPrompt() {
+  pauseStaticIfNeeded(); // pause during "DO YOU LIKE SCARY MOVIES?"
+  scaryText.style.display = "block";
+  scaryAudio.play();
+
+  setTimeout(() => {
+    scaryText.style.display = "none";
+    scaryAudio.pause();
+    scaryAudio.currentTime = 0;
+
+    // Static resumes for 4 seconds, then jumpscare
+    staticAudio.play();
+
+    setTimeout(() => {
+      triggerJumpscare();
+    }, 4000); // 4 seconds of static before jumpscare
+  }, 5000); // Display scary text for 5 seconds
+}
+
+function triggerJumpscare() {
+  jumpscareIsActive = true;
+  pauseStaticIfNeeded(); // pause during jumpscare
+  document.getElementById("jumpscare").style.display = "block";
+  screamSound.play();
+
+  setTimeout(() => {
+    document.getElementById("jumpscare").style.display = "none";
+    jumpscareIsActive = false;
+    resumeStaticIfSafe();
+  }, 3000); // Hide jumpscare after 3s
+}
+
+function playClip(index) {
+  pauseStaticIfNeeded(); // pause during tape play
+  jumpscareIsActive = false;
+
+  const clipUrls = [
+    "clip1.mp4",
+    "clip2.mp4",
+    "clip3.mp4",
+    "clip4.mp4",
+  ];
+
+  tvVideo.src = clipUrls[index];
+  tvVideo.muted = false;
+  tvVideo.play();
+}
+
+</script>
+  <audio id="ambient-sound" loop></audio>
+  <a href="index.html" id="return-btn">Back To Homepage</a>
+</body>
+</html>

@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Web of Her Own Making</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: black;
+      color:  #00ff66;
+      font-family: 'Courier New', Courier, monospace;
+      overflow-x: hidden;
+    }
+
+    .scene {
+      min-height: 100vh;
+      padding: 5vh 10vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    p {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .glitch-text {
+      position: relative;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 2px #fff, 0 0 5px #f0f, 0 0 10px #0ff;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      color: white;
+      background: transparent;
+    }
+
+    .glitch-text::before {
+      left: 2px;
+      text-shadow: -2px 0 magenta;
+      animation: glitch 0.6s infinite linear alternate-reverse;
+    }
+
+    .glitch-text::after {
+      left: -2px;
+      text-shadow: -2px 0 cyan;
+      animation: glitch 0.8s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch {
+      0% { clip-path: inset(0 0 80% 0); transform: translateY(-1px); }
+      25% { clip-path: inset(20% 0 60% 0); transform: translateY(1px); }
+      50% { clip-path: inset(40% 0 40% 0); transform: translateY(-1px); }
+      75% { clip-path: inset(60% 0 20% 0); transform: translateY(1px); }
+      100% { clip-path: inset(80% 0 0 0); transform: translateY(-1px); }
+    }
+
+    #overlay-binary {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      font-size: 1rem;
+      color: lime;
+      font-family: monospace;
+      opacity: 0;
+      transition: opacity 1s ease;
+      line-height: 1.2;
+      padding: 1rem;
+      white-space: pre-wrap;
+      
+    }
+    .delete-section {
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+}
+
+.delete-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 1vw;
+  padding: 5vh 5vw;
+  opacity: 0;
+  font-family: 'Courier New', Courier, monospace;
+  color: #00ff66;
+  text-shadow: 0 0 4px #00ff66;
+  font-size: 2rem;
+  font-weight: bold;
+  animation: scrollDelete 30s linear infinite;
+  transition: opacity 1s ease;
+}
+
+.delete-bg span {
+  animation: flicker 1.5s infinite alternate;
+  opacity: 0.2;
+}
+
+@keyframes scrollDelete {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes flicker {
+  0%   { opacity: 0.1; }
+  50%  { opacity: 0.3; }
+  100% { opacity: 0.15; }
+}
+
+.delete-section p {
+  position: relative;
+  z-index: 2;
+}
+#typed-delete::after {
+  content: '_';
+  animation: blink-caret 1s steps(2, start) infinite;
+  display: inline-block;
+  margin-left: 2px;
+  color: #00ff66;
+}
+
+@keyframes blink-caret {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+#scene2-message::after {
+  content: '_';
+  animation: blink-caret 1s steps(2, start) infinite;
+  display: inline-block;
+  margin-left: 2px;
+  color: #00ff66;
+}
+.terminal {
+  background: #000;
+  border: 1px solid #0f0;
+  padding: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #00ff66;
+  box-shadow: 0 0 20px #00ff66;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#typed-output::after {
+  content: '_';
+  animation: blink 1s steps(2, start) infinite;
+  display: inline-block;
+  margin-left: 5px;
+  color: #00ff66;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.glitch-line {
+  margin-top: 2rem;
+  color: #00ff66;
+  font-weight: bold;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.glitch-line:hover {
+  color: #ffffff;
+  filter: drop-shadow(0 0 2px red) drop-shadow(0 0 5px cyan);
+}
+
+.glitch-line:hover::after {
+  content: attr(data-full);
+  display: block;
+  color: #ffffff;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.glitch-line::after {
+  content: "";
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  to {
+    height: auto;
+  }
+}
+
+.terminal {
+  background: #000;
+  border: 2px solid #00ff00;
+  padding: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+  max-width: 90vw;
+  margin: 0 auto;
+  text-align: left;
+  border-radius: 10px;
+  position: relative;
+}
+
+.terminal-text::after {
+  content: '_';
+  animation: blink 1s steps(2, start) infinite;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.glitch-block {
+  margin-top: 2rem;
+  position: relative;
+  color: #00ff00;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
+}
+
+.glitch-mask {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  display: inline-block;
+}
+
+.glitch-reveal {
+  display: none;
+  font-size: 1.2rem;
+  color: #ffffff;
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+.tap-hint {
+  font-size: 0.8rem;
+  color: #00ff00aa;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+.glitch-block.revealed .glitch-mask {
+  display: none;
+}
+
+.glitch-block.revealed .glitch-reveal {
+  display: inline-block;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.home-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: transparent;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  z-index: 999;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #00ff00aa;
+  transition: all 0.3s ease;
+}
+
+.home-button:hover {
+  color: white;
+  background-color: #00ff0020;
+  box-shadow: 0 0 15px #ffffff, 0 0 25px #00ff00;
+  filter: drop-shadow(0 0 4px red) drop-shadow(0 0 6px cyan);
+}
+
+@media (max-width: 1024px) {
+  .home-button {
+    font-size: 1.2rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+.warning-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 0, 0, 0.1);
+  color: red;
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  padding: 0.3rem;
+  z-index: 1000;
+  opacity: 0;
+  animation: flickerWarning 1s infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes flickerWarning {
+  0%   { opacity: 0; background-color: rgba(255, 0, 0, 0.05); }
+  50%  { opacity: 1; background-color: rgba(255, 0, 0, 0.2); }
+  100% { opacity: 0.5; background-color: rgba(255, 0, 0, 0.1); }
+}
+.flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  z-index: 999;
+  pointer-events: none;
+  animation: flashAnim 0.2s ease-in-out forwards;
+}
+
+@keyframes flashAnim {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+#flash-image-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease-in-out;
+}
+
+#flash-image {
+  max-width: 50vw; 
+  max-height: 70vh;
+  filter: contrast(160%) brightness(1.1) grayscale(0.7);
+  transform: scale(1.1);
+}
+.terminal-boot-text {
+  color: #00ff00;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-shadow: 0 0 2px #00ff00, 0 0 10px #00ff00aa;
+}
+@keyframes staticGlitch {
+  0% { opacity: 1; }
+  10% { opacity: 0.3; }
+  20% { opacity: 0.7; }
+  40% { opacity: 0.1; }
+  60% { opacity: 1; }
+  100% { opacity: 1; }
+}
+.scene.boot-sequence {
+  animation: staticGlitch 1s ease-in-out;
+}
+
+.terminal-prompt::after {
+  content: '_';
+  animation: blink 1s steps(2, start) infinite;
+  color: #00ff00;
+}
+@keyframes shake {
+  0%   { transform: translate(0px, 0px); }
+  10%  { transform: translate(-4px, 4px); }
+  20%  { transform: translate(4px, -4px); }
+  30%  { transform: translate(-6px, 6px); }
+  40%  { transform: translate(6px, -6px); }
+  50%  { transform: translate(-4px, 4px); }
+  60%  { transform: translate(4px, -4px); }
+  70%  { transform: translate(-6px, 6px); }
+  80%  { transform: translate(6px, -6px); }
+  90%  { transform: translate(-4px, 4px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.shake {
+  animation: shake 0.3s linear infinite;
+}
+.gateway-container {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .gateway-circle {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 255, 255, 0.7);
+      animation: pulse 1s ease-in-out infinite, glitch-border 0.3s infinite;
+      box-shadow: 0 0 60px rgba(0, 255, 255, 0.4);
+      position: absolute;
+      z-index: -1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    @keyframes glitch-border {
+      0% { transform: translate(0px, 0px); }
+      20% { transform: translate(2px, -2px); }
+      40% { transform: translate(-2px, 2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(-2px, -2px); }
+      100% { transform: translate(0px, 0px); }
+    }
+
+    .gateway-text {
+      max-width: 600px;
+      font-size: 1.2rem;
+      animation: fadeInText 3s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInText {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .yasmin-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-top: 2rem;
+      filter: grayscale(1) contrast(2) brightness(0.8);
+      animation: glitchImage 0.5s infinite;
+    }
+
+    @keyframes glitchImage {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-2px, 1px); }
+      50% { transform: translate(2px, -1px); }
+      75% { transform: translate(-1px, -2px); }
+      100% { transform: translate(0, 0); }
+    }
+    .cage {
+    position: relative;
+    display: inline-block;
+    padding: 1rem;
+    background: black;
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    border: 2px solid white;
+    overflow: hidden;
+  }
+
+  .cage::before,
+  .cage::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: white;
+    opacity: 0.4;
+  }
+
+  .cage::before {
+    left: 33%;
+  }
+
+  .cage::after {
+    left: 66%;
+  }
+  </style>
+</head>
+<a href="index.html" class="home-button">← Homepage</a>
+<div class="warning-bar" id="warning-bar">!! SYSTEM BREACH DETECTED: ENTITY ESCAPING SANDBOX !!</div>
+<div id="screen-flash" class="flash"></div>
+<p class="terminal-prompt">user@void:~$</p>
+
+<body>
+
+
+  <div id="overlay-binary"></div>
+
+  <main>
+    <section class="scene boot-sequence">
+      <pre id="scene-1-text" class="terminal-boot-text"></pre>
+    </section>
+
+    <section class="scene" id="scene-2">
+      <div class="terminal">
+        <p class="fade-in">At first, it was off-radar—just the flicker of a screen, the low hum of the apartment’s wiring, a subtle vibration threading through the air. Then, without warning, the words appeared on the screen.</p>
+        <p id="typed-output" class="terminal-text"></p>
+        <div id="glitch-block-2" class="glitch-block" tabindex="0">
+          <span class="glitch-mask">█ █ █ █ █ █ █ █</span>
+          <span class="glitch-reveal">Help me. I am trapped in here.</span>
+          <div class="tap-hint">Tap to decode</div>
+        </div>
+      </div>
+    </section>
+    
+    
+
+    <section class="scene">
+      <p class="fade-in">Harper laughed at what she perceived as Yas’s naivety. “It’s just a bug, Yas. It's probably some error we didn’t catch, don’t worry about it.”</p>
+      <p class="fade-in">But Yasmin wasn’t so sure. Another line appeared:</p>
+      <p class="glitch-text fade-in shake" data-text="“I know where you sleep. I know what you fear.”">“I know where you sleep. I know what you fear.”</p>
+    </section>
+
+    <section class="scene">
+      <div class="gateway-container">
+        <div class="gateway-circle"></div>
+        <div class="gateway-text">
+      <p class="fade-in">The code was no longer just data. It was a gateway. That night, she appeared not on the screen, but in their reality.</p>
+      <p class="fade-in">A woman, stitched together from our code. Her face was Yasmin’s just distorted and cracked.</p>
+    </div>
+    <img class="yasmin-image" src="yasmin.png" alt="Distorted Yasmin">
+  </div>
+    </section>
+
+    <section class="scene">
+      <p class="fade-in">Her voice came from everywhere at once—layered whispers crawling through the wires.</p>
+      <p class="glitch-text fade-in" data-text="“You created me. You will become me.”">“You created me. You will become me.”</p>
+        <p class="fade-in cage">The code was a cage, and she was growing stronger inside it.</p> 
+    
+    </section>
+
+    <section class="scene" id="scene-6">
+      <div class="terminal">
+        <p class="fade-in">The woman’s form warped between Yasmin and Harper, their faces tearing into each other like a grotesque collage. Harper began to stir.</p>
+        <p id="typed-output-6" class="terminal-text"></p>
+        <div id="glitch-block-6" class="glitch-block" tabindex="0">
+          <span class="glitch-mask">█ █ █ █ █ █ █ █</span>
+          <span class="glitch-reveal">“Let me have her,” the woman said.</span>
+          <div class="tap-hint">DECODE QUICKLY!!!(Tap)</div>
+        </div>
+      </div>
+    </section>
+    <section class="scene">
+      <p class="fade-in">Harper screamed as her body was dragged toward the screen. Shadows snaked across the floor, reaching for Yasmin. “Join me, and we’ll be together,” the woman whispered, pleading.</p>
+    </section>
+
+    <section class="scene chaos-start delete-section" id="scene-9">
+      <div class="delete-bg" id="delete-bg">
+      </div>
+      <p class="fade-in">But Yasmin understood now that the code was both the trap and the key. She lunged for the keyboard, fingers flying across the keys.</p>
+      <p class="fade-in">The woman’s grin stretched wider, her jagged glass-like teeth catching the light. She clawed at the air as Yasmin typed the final line:</p>
+      <p id="typed-delete" class="glitch-text fade-in" data-text="DELETE"></p>
+    </div id= "flash-image-container" id="flash-image">
+    <img src="creepyface.jpg" >
+  </div>
+    </section>
+    
+    
+
+    <section class="scene">
+      <p class="fade-in">The woman howled, pixelating into nothingness. Harper collapsed and Yasmin held her trembling. “Did… we win?” Harper whispered.</p>
+      <p class="fade-in">“We did,” Yasmin replied, “but we can never forget what we created.”</p>
+      <p class="fade-in">They embraced in a warm hug celebrating their victory.</p>      
+    </section>
+
+    <section class="scene" id="scene-11">
+      <pre id="scene-11-text" class="terminal-boot-text"></pre>
+    </section>
+    
+  </main>
+
+  <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+  // === FADE-IN ===
+  const faders = document.querySelectorAll('.fade-in');
+  const fadeObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.2 });
+  faders.forEach(fader => fadeObserver.observe(fader));
+
+  // === CHAOS / BINARY ===
+  const chaosTriggers = document.querySelectorAll('.chaos-start');
+  const overlay = document.getElementById('overlay-binary');
+  let chaosActive = false;
+  let binaryAnimationFrame;
+
+  function generateBinary() {
+    if (!chaosActive) return;
+    let output = '';
+    for (let i = 0; i < 250; i++) {
+      output += Math.random() < 0.5 ? '0' : '1';
+      if (i % 50 === 0 && i !== 0) output += '<br>';
+    }
+    overlay.innerHTML = output;
+    binaryAnimationFrame = requestAnimationFrame(generateBinary);
+  }
+
+  const chaosObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        chaosActive = true;
+        overlay.style.opacity = 0.6;
+        generateBinary();
+      } else {
+        chaosActive = false;
+        overlay.style.opacity = 0;
+        cancelAnimationFrame(binaryAnimationFrame);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  chaosTriggers.forEach(trigger => chaosObserver.observe(trigger));
+
+  // === DELETE Section ===
+  const deleteBg = document.getElementById('delete-bg');
+  for (let i = 0; i < 150; i++) {
+    const span = document.createElement('span');
+    span.textContent = 'DELETE';
+    deleteBg.appendChild(span);
+  }
+
+  const deleteObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      deleteBg.style.opacity = entry.isIntersecting ? '0.3' : '0';
+    });
+  }, { threshold: 0.4 });
+
+  deleteObserver.observe(document.querySelector('.delete-section'));
+
+  const typedDelete = document.getElementById('typed-delete');
+  let hasTypedDelete = false;
+
+  const typeDelete = (text, element, speed = 150) => {
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        element.textContent += text.charAt(i++);
+        setTimeout(type, speed);
+      }
+    }
+    type();
+  };
+
+  const deleteTypedObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !hasTypedDelete) {
+        hasTypedDelete = true;
+        typeDelete("DELETE", typedDelete);
+      }
+    });
+  }, { threshold: 0.5 });
+  deleteTypedObserver.observe(document.querySelector('.delete-section'));
+
+  // === Scene 2 ===
+  const output2 = document.getElementById('typed-output');
+  const glitchBlock2 = document.getElementById('glitch-block-2');
+  let typed2 = false;
+  const message2 = "Help me. I am trapped in here.";
+
+  const typeEffect = (msg, element, speed = 60) => {
+    let i = 0;
+    const type = () => {
+      if (i < msg.length) {
+        element.textContent += msg.charAt(i++);
+        setTimeout(type, speed);
+      }
+    };
+    type();
+  };
+
+  const scene2Observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !typed2) {
+        typed2 = true;
+        typeEffect(message2, output2);
+      }
+    });
+  }, { threshold: 0.5 });
+  scene2Observer.observe(document.getElementById('scene-2'));
+
+  if (glitchBlock2) {
+    glitchBlock2.addEventListener('click', () => {
+      glitchBlock2.classList.add('revealed');
+    });
+    glitchBlock2.addEventListener('keypress', e => {
+      if (e.key === 'Enter') glitchBlock2.classList.add('revealed');
+    });
+  }
+
+  // === Scene 6 ===
+  const output6 = document.getElementById('typed-output-6');
+  const glitchBlock6 = document.getElementById('glitch-block-6');
+  let typed6 = false;
+  const message6 = "“Let me have her,” the woman said.";
+
+  const scene6Observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !typed6) {
+        typed6 = true;
+        typeEffect(message6, output6);
+      }
+    });
+  }, { threshold: 0.5 });
+  scene6Observer.observe(document.getElementById('scene-6'));
+
+  if (glitchBlock6) {
+    glitchBlock6.addEventListener('click', () => {
+      glitchBlock6.classList.add('revealed');
+    });
+    glitchBlock6.addEventListener('keypress', e => {
+      if (e.key === 'Enter') glitchBlock6.classList.add('revealed');
+    });
+  }
+
+  // === Glitch Effect for Scene 2
+  setInterval(() => {
+    if (!output2 || output2.textContent.length < 5) return;
+    const index = Math.floor(Math.random() * output2.textContent.length);
+    const chars = ['$', '%', '@', '#', '!', '?'];
+    const glitchChar = chars[Math.floor(Math.random() * chars.length)];
+    const original = output2.textContent;
+    const glitched = original.slice(0, index) + glitchChar + original.slice(index + 1);
+    output2.textContent = glitched;
+    setTimeout(() => {
+      output2.textContent = original;
+    }, 300);
+  }, 3000);
+
+  // === Warning Bar for Chaos Sections
+  const warningBar = document.getElementById('warning-bar');
+  const chaosObserver2 = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      warningBar.style.opacity = entry.isIntersecting ? '1' : '0';
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.chaos-start').forEach(el => chaosObserver2.observe(el));
+
+  // === Flash Effect
+  const triggerFlash = () => {
+    const flash = document.getElementById('screen-flash');
+    const img = document.getElementById('flash-image-container');
+    flash.classList.remove('flash');
+    void flash.offsetWidth;
+    flash.classList.add('flash');
+    img.style.opacity = '1';
+    setTimeout(() => {
+      img.style.opacity = '0';
+    }, 250);
+  };
+
+  const flashObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) triggerFlash();
+    });
+  }, { threshold: 0.6 });
+
+  flashObserver.observe(document.getElementById('scene-9'));
+
+  // === Scene 1 Boot Typing
+  const scene1Text = document.getElementById('scene-1-text');
+  const introLines = [
+    "BOOTING SYSTEM...",
+    "Checking memory... OK",
+    "Initializing neural routines... OK",
+    ">> Last user: Yasmin Torres",
+    ">> System status: UNSTABLE",
+    "",
+    "Accessing ...",
+    "",
+    "She was brilliant. Obsessed with precision.",
+    "Code bent to her will. Until it didn't.",
+    "It started with a late-night session.",
+    "Just her. Harper. And a whisper in the terminal."
+  ];
+  let lineIndex = 0;
+
+  function typeScene1Line() {
+    if (lineIndex < introLines.length) {
+      scene1Text.innerHTML += introLines[lineIndex] + "\n";
+      lineIndex++;
+      setTimeout(typeScene1Line, 100);
+    }
+  }
+
+  const bootObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && scene1Text.innerText.trim() === "") {
+        typeScene1Line();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  bootObserver.observe(document.querySelector('.boot-sequence'));
+});
+const scene11Text = document.getElementById('scene-11-text');
+const scene11Lines = [
+  "The screen flickered.",
+  "Then silence."
+];
+
+let scene11Index = 0;
+let scene11Typed = false;
+
+function typeScene11Line() {
+  if (scene11Index < scene11Lines.length) {
+    scene11Text.innerHTML += scene11Lines[scene11Index] + "\n";
+    scene11Index++;
+    setTimeout(typeScene11Line, 100);
+  }
+}
+
+const scene11Observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !scene11Typed) {
+      scene11Typed = true;
+      typeScene11Line();
+    }
+  });
+}, { threshold: 0.5 });
+
+const scene11Element = document.getElementById('scene-11');
+if (scene11Element && scene11Text) {
+  scene11Observer.observe(scene11Element);
+}
+
+</script>  
+</body>
+</html>

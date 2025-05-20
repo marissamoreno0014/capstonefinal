@@ -17,8 +17,8 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     height: 100vh;
     width: 100vw;
   }
@@ -30,8 +30,7 @@
   }
   .clickable1,
   .clickable2,
-  .clickable3,
-  .clickable4 {
+  .clickable3 {
     border: none;
     box-shadow: none;
     cursor: pointer;
@@ -43,9 +42,7 @@
   .clickable2:hover,
   .clickable2.revealed,
   .clickable3:hover,
-  .clickable3.revealed,
-  .clickable4:hover,
-  .clickable4.revealed {
+  .clickable3.revealed {
     border: 2px solid crimson;
     box-shadow: 0 0 20px red;
   }
@@ -229,42 +226,34 @@
 <div id="blackOverlay"></div>
 
 <div id="gridWrapper" class="grid">
-  <!-- Row 1 -->
-  <a href="story1.html" class="grid-item clickable1">
-    <div class="mist"></div>
-    <img src="img1.jpg" alt="Story 1" />
-  </a>
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img2.jpg" alt="" />
-  </div>
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img3.jpg" alt="" />
-  </div>
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img4.jpg" alt="" />
-  </div>
 
-  <!-- Row 2 -->
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img5.jpg" alt="" />
-  </div>
-  <a href="story2.html" class="grid-item clickable2 interactive-image">
+  <!-- Row 1 -->
+  <a href="bury.html" class="grid-item clickable2 interactive-image">
     <div class="bg-fill" style="background-image: url('img6.jpg');"></div>
     <img src="img6.jpg" alt="Story 2" class="fit-contain ghostly" />
   </a>  
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img7.jpg" alt="" />
+    <img src="img5.jpg" alt="" />
   </div>
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img8.jpg" alt="" />
+    <img src="img7.jpg" alt="" />
   </div>
+  <!-- Row 2 -->
 
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img2.jpg" alt="" />
+  </div>
+  <a href="pred.html" class="grid-item clickable1">
+    <div class="mist"></div>
+    <img src="img1.jpg" alt="Story 1" />
+  </a>
+  <div class="grid-item">
+    <div class="mist"></div>
+    <img src="img3.jpg" alt="" />
+  </div>
   <!-- Row 3 -->
   <div class="grid-item">
     <div class="mist"></div>
@@ -274,33 +263,12 @@
     <div class="mist"></div>
     <img src="img10.jpg" alt="" />
   </div>
-  <a href="story3.html" class="grid-item clickable3 interactive-image">
+  <a href="makeover.html" class="grid-item clickable3 interactive-image">
     <div class="bg-fill" style="background-image: url('img11.jpg');"></div>
     <img src="img11.jpg" alt="Story 3" class="fit-contain ghostly" />
   </a>
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img12.jpg" alt="" />
-  </div>
 
-  <!-- Row 4 -->
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img13.jpg" alt="" />
-  </div>
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img14.jpg" alt="" />
-  </div>
-  <div class="grid-item">
-    <div class="mist"></div>
-    <img src="img15.jpg" alt="" />
-  </div>
-  <a href="story4.html" class="grid-item clickable4">
-    <div class="mist"></div>
-    <img src="img16.jpg" alt="Story 4" />
-  </a>
-</div>
+
 
 <!-- Back to Home button -->
 <button id="backHomeBtn" title="Back to Home Screen" aria-label="Back to Home Screen"> Home</button>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What We Lost</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: 'Cinzel', serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    #bg-creep {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url("option1.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: -3;
+      animation: creepyMove 10s infinite ease-in-out alternate;
+      transform-origin: center;
+      filter: brightness(0.7) contrast(1.1);
+    }
+
+    @keyframes creepyMove {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.05) translate(10px, -10px); }
+    }
+
+    .knife-tear-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('knifetear.jpg') no-repeat center center;
+      background-size: cover;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.35;
+      mix-blend-mode: screen;
+    }
+    #what-we-lost {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 3rem;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .script-box {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 2rem 2.5rem;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid crimson;
+      box-shadow: 0 0 20px crimson;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: crimson;
+      text-shadow: 0 0 18px crimson;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .final-text {
+      font-size: 1rem;
+      line-height: 1.9;
+      letter-spacing: 0.3px;
+      animation: fadeInText 2s ease forwards;
+      white-space: pre-wrap;
+      color: #ddd;
+    }
+
+    .final-text p {
+      margin-bottom: 1.5rem;
+    }
+
+    .stage {
+      font-style: italic;
+      text-transform: uppercase;
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #return-btn {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      padding: 12px 20px;
+      background: rgba(0, 0, 0, 0.85);
+      color: crimson;
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      border: 2px solid crimson;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 9999;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 12px crimson;
+    }
+
+    #return-btn:hover {
+      background: crimson;
+      color: black;
+      box-shadow: 0 0 18px red;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="bg-creep"></div>
+  <div class="knife-tear-overlay"></div>
+
+  <section id="what-we-lost">
+    <h1>What We Lost</h1>
+    <p class="final-text">
+      <em>Scream 5</em> chose to erase a female queer relationship not out of narrative necessity, but fear of backlash of improper representation. Amber and Tara’s bond was rewritten from lovers to friends, silencing what could’ve been a haunting, powerful story of betrayal and heartbreak.
+    </p>
+    <p class="final-text">
+      Queer women deserve complexity even if it means being the killer. When straight couples can be both villains and victims (like Billy and Sidney in <em>Scream</em>), why are queer women denied the same depth?
+    </p>
+    <p class="final-text">
+      By discarding the original script, the film lost its edge. Real representation means showing all sides even the monstrous. To censor is not to protect, but to dilute. We didn’t need safety. We needed truth.
+    </p>
+    <div class="knife-tear-overlay"></div>
+</section>
+
+  <a href="index.html" id="return-btn">Return</a>
+
+</body>
+</html>
+

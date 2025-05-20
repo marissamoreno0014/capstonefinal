@@ -42,9 +42,28 @@ const fragments = [
 ];
 
 // Mapping based on your custom order
+const emojis = ["🧒", "👁️", "🔇", "🌫️", "💄", "😏", "🪞", "✂️", "📜🔥", "🌟"];
 const mapping = [0, 2, 4, 9, 3, 6, 8, 1, 5, 7];
 
 let revealedFragments = 0;
+
+function isFarEnough(x, y) {
+  // Your existing distance checking function for positioning hotspots
+  // Return true if new position is far enough from existing ones, else false
+  const minDistance = 10; // in vw/vh units or adapt as needed
+  for (const pos of usedPositions) {
+    const dx = pos.x - x;
+    const dy = pos.y - y;
+    if (Math.sqrt(dx * dx + dy * dy) < minDistance) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function getRequiredHotspotIndex(fragmentIndex) {
+  return mapping[fragmentIndex];
+}
 
 function createHotspots() {
   const container = document.getElementById("hotspot-container");
@@ -52,6 +71,13 @@ function createHotspots() {
   for (let i = 0; i < fragments.length; i++) {
     const hotspot = document.createElement("div");
     hotspot.classList.add("hotspot");
+
+    // Use emoji as content
+    hotspot.textContent = emojis[i];
+    hotspot.style.fontSize = "2.5rem";
+    hotspot.style.userSelect = "none";
+    hotspot.style.cursor = "pointer";
+    hotspot.style.position = "absolute";
 
     let x, y, attempts = 0;
     do {
@@ -68,50 +94,17 @@ function createHotspots() {
 
     hotspot.dataset.index = i;
 
-    // Handle both desktop hover and mobile touch
-    const trigger = () => {
+    // Use your existing logic for touch and hover events:
+    // For mobile:
+    hotspot.addEventListener("touchstart", () => {
       if (parseInt(hotspot.dataset.index) === getRequiredHotspotIndex(revealedFragments)) {
         revealFragment(revealedFragments);
         triggerHint(mapping[revealedFragments], hotspot);
         hotspot.remove();
       }
-    };
+    }, { passive: true });
 
-    //hotspot.addEventListener("mouseenter", trigger);
-    hotspot.addEventListener("touchstart", trigger, { passive: true });
-
-    container.appendChild(hotspot);
-  }
-}
-
-
-function getRequiredHotspotIndex(fragmentIndex) {
-  return mapping[fragmentIndex];
-}
-
-function createHotspots() {
-  const container = document.getElementById("hotspot-container");
-
-  for (let i = 0; i < fragments.length; i++) {
-    const hotspot = document.createElement("div");
-    hotspot.classList.add("hotspot");
-
-    let x, y, attempts = 0;
-    do {
-      x = 10 + Math.random() * 80; // vw
-      y = 10 + Math.random() * 80; // vh
-      attempts++;
-      if (attempts > 100) break; // fail-safe to prevent infinite loop
-    } while (!isFarEnough(x, y));
-
-    // Store in used positions for future distance checks
-    usedPositions.push({ x, y });
-
-    hotspot.style.left = `${x}vw`;
-    hotspot.style.top = `${y}vh`;
-
-    hotspot.dataset.index = i;
-
+    // For desktop (hover or click):
     hotspot.addEventListener("mouseenter", () => {
       if (parseInt(hotspot.dataset.index) === getRequiredHotspotIndex(revealedFragments)) {
         revealFragment(revealedFragments);
@@ -389,7 +382,7 @@ createHotspots();
     position: absolute;
     width: 80px;  /* Increased size */
     height: 80px; /* Increased size */
-    background: rgba(255, 255, 255, 0.2);
+    background-image: url('hotspot.png');    
     border-radius: 50%;
     cursor: pointer;
     animation: pulse 2s infinite ease-in-out;

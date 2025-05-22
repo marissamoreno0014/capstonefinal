@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
             shadowRight.remove();
         }, 1000);
     });
-
+    
     // Ghostly Reaper for "The Reaper—hooded and hollow-eyed—had grown weary"
     const reaperTrigger = document.querySelector("#reaper-scene");
     reaperTrigger.addEventListener("mouseenter", function () {
@@ -273,3 +273,45 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+function spawnVampire() {
+    let vampire = document.createElement("img");
+    vampire.src = "vampire.png";
+    vampire.classList.add("vampire");
+
+    let spawnSide = Math.floor(Math.random() * 3); 
+    let startX, startY, endX, endY;
+
+    if (spawnSide === 0) { 
+        startX = "-10%";
+        startY = Math.random() * 80 + "%";
+        endX = "110%";
+        endY = Math.random() * 80 + "%";
+    } else if (spawnSide === 1) { 
+        startX = "110%";
+        startY = Math.random() * 80 + "%";
+        endX = "-10%";
+        endY = Math.random() * 80 + "%";
+    } else { 
+        startX = Math.random() * 80 + "%";
+        startY = "-10%";
+        endX = Math.random() * 80 + "%";
+        endY = "110%";
+    }
+
+    vampire.style.position = "fixed";
+    vampire.style.left = startX;
+    vampire.style.top = startY;
+
+    vampire.style.transition = `all ${Math.random() * 4 + 3}s linear`;
+    document.body.appendChild(vampire);
+
+    setTimeout(() => {
+        vampire.style.left = endX;
+        vampire.style.top = endY;
+        vampire.style.opacity = "1";
+    }, 50); 
+
+    setTimeout(() => vampire.remove(), 5000);
+}
+
+setInterval(spawnVampire, Math.random() * 7000 + 5000);

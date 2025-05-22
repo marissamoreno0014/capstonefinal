@@ -46,8 +46,6 @@
     border: 2px solid crimson;
     box-shadow: 0 0 20px red;
   }
-
-  /* Black overlay on each grid-item */
   .grid-item::before {
     content: '';
     position: absolute;
@@ -64,7 +62,6 @@
     pointer-events: none;
   }
 
-  /* Mist effect above image but below overlay */
   .mist {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -230,42 +227,42 @@
   <!-- Row 1 -->
   <a href="bury.html" class="grid-item clickable2 interactive-image">
     <div class="bg-fill" style="background-image: url('img6.jpg');"></div>
-    <img src="img6.jpg" alt="Story 2" class="fit-contain ghostly" />
+    <img src="img6.jpg" />
   </a>  
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img5.jpg" alt="" />
+    <img src="img5.jpg" />
   </div>
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img7.jpg" alt="" />
+    <img src="img7.jpg"  />
   </div>
   <!-- Row 2 -->
 
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img2.jpg" alt="" />
+    <img src="img2.jpg"  />
   </div>
   <a href="pred.html" class="grid-item clickable1">
     <div class="mist"></div>
-    <img src="img1.jpg" alt="Story 1" />
+    <img src="img1.jpg" />
   </a>
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img3.jpg" alt="" />
+    <img src="img3.jpg" />
   </div>
   <!-- Row 3 -->
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img9.jpg" alt="" />
+    <img src="img9.jpg" />
   </div>
   <div class="grid-item">
     <div class="mist"></div>
-    <img src="img10.jpg" alt="" />
+    <img src="img10.jpg"/>
   </div>
   <a href="makeover.html" class="grid-item clickable3 interactive-image">
     <div class="bg-fill" style="background-image: url('img11.jpg');"></div>
-    <img src="img11.jpg" alt="Story 3" class="fit-contain ghostly" />
+    <img src="img11.jpg" />
   </a>
 
 
@@ -274,7 +271,6 @@
 <button id="backHomeBtn" title="Back to Home Screen" aria-label="Back to Home Screen"> Home</button>
 
 <script>
-  // Reveal gridWrapper and fade out blackOverlay on first interaction
   let revealed = false;
   const body = document.body;
   const backHomeBtn = document.getElementById('backHomeBtn');
@@ -283,7 +279,6 @@
     if (revealed) return;
     revealed = true;
     body.classList.add('reveal');
-    // Show the Back to Home button once any image is revealed
     backHomeBtn.classList.add('visible');
   }
 
@@ -291,7 +286,7 @@
   window.addEventListener('touchstart', triggerReveal);
   window.addEventListener('click', triggerReveal);
 
-  // Individual grid-item reveal on hover or touch
+  // Individual item reveal on hover or touch
   document.addEventListener('DOMContentLoaded', () => {
     const gridItems = document.querySelectorAll('.grid-item');
 
@@ -304,14 +299,11 @@
         item.classList.add('revealed');
         if (!revealed) triggerReveal();
       });
-      // For touch support
       item.addEventListener('touchstart', () => {
         item.classList.add('revealed');
         if (!revealed) triggerReveal();
       });
     });
-
-    // Also reveal on touchmove for better mobile experience
     document.addEventListener('touchmove', e => {
       const touch = e.touches[0];
       if (!touch) return;
@@ -326,7 +318,7 @@
     }, { passive: true });
   });
 
-  // Back to Home button click handler
+  // Back to Home button 
   backHomeBtn.addEventListener('click', () => {
     window.location.href = 'index.html';
   });

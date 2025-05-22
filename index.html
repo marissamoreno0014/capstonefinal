@@ -8,7 +8,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap');
 
-        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -116,17 +115,17 @@
             }
         }
 
-    #mirror-surface {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background:
-        radial-gradient(circle at center, rgba(0, 0, 0, 0.6) 70%, rgba(0, 0, 0, 0.8) 100%),
-        url('mirror.png') center center / cover no-repeat;
-    overflow: hidden;
-    border-radius: 10% / 20%;
-    filter: brightness(1.2) contrast(1.2);
-}
+        #mirror-surface {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at center, rgba(0, 0, 0, 0.6) 70%, rgba(0, 0, 0, 0.8) 100%),
+            url('mirror.png') center center / cover no-repeat;
+        overflow: hidden;
+        border-radius: 10% / 20%;
+        filter: brightness(1.2) contrast(1.2);
+        }
 
 
         #shadow-flickers {
@@ -171,21 +170,21 @@
             z-index: 9999;
         }
         @keyframes drip {
-    0% {
+        0% {
         top: -30px;
         opacity: 1;
         transform: translateX(0);
     }
-    70% {
+        70% {
         opacity: 1;
         transform: translateX(2px);
     }
-    100% {
-        top: 110vh;      /* fall below viewport */
+        100% {
+        top: 110vh;      
         opacity: 0;
         transform: translateX(4px);
     }
-}
+    }
 
         #ripple-canvas {
             position: absolute;
@@ -260,7 +259,6 @@
             opacity: 1;
         }
 
-        /* Spider styles */
         .spider {
             position: absolute;
             width: 26px;
@@ -274,7 +272,6 @@
             transition: transform 0.15s ease;
         }
 
-        /* Accessibility helper */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -286,7 +283,6 @@
             border: 0;
         }
 
-        /* Glitch effect for mirror surface */
         @keyframes glitchShift {
 
             0%,
@@ -309,7 +305,6 @@
             animation: glitchShift 0.3s infinite;
         }
 
-        /* Mute button */
         #mute-button {
             position: fixed;
             bottom: 15px;
@@ -369,7 +364,7 @@
                         <span id="desc-stories" class="sr-only">Navigate to the database of short stories</span>
                     </div>
 
-                    <!-- Historical Representation Media/TV -->
+                    <!-- Historical Representation-->
                     <div class="reflection" data-project="historical" tabindex="0" role="button"
                         aria-describedby="desc-historical" aria-label="Historical representation media and TV">
                         <img src="tv.png" alt="Old television silhouette" />
@@ -394,7 +389,7 @@
     <button id="mute-button" aria-pressed="false" aria-label="Toggle ambient sounds">🔇 Mute</button>
 
     <script>
-        // Ripple effect on mirror surface
+    
         const mirrorSurface = document.getElementById('mirror-surface');
         const rippleCanvas = document.getElementById('ripple-canvas');
         const ctx = rippleCanvas.getContext('2d');
@@ -433,7 +428,6 @@
             ripples.push({ x, y, radius: 0, alpha: 0.3 });
         });
 
-        // Reflection click handlers
         document.querySelectorAll('.reflection').forEach(el => {
             el.addEventListener('click', e => {
                 e.preventDefault();
@@ -454,7 +448,6 @@
 
                 setTimeout(() => {
                     const project = el.dataset.project;
-                    // Replace alert with actual navigation logic
                     alert(`Navigating to: ${project}`);
                     mirrorSurface.style.opacity = 1;
                 }, 1400);
@@ -468,7 +461,7 @@
             });
         });
 
-        // Spider crawl logic
+        // Spider logic
         const spiderCount = 12;
         const container = document.getElementById('mirror-surface');
 
@@ -509,8 +502,6 @@
                 if (s.y > container.clientHeight - s.height) { s.y = container.clientHeight - s.height; s.speedY *= -1; }
 
                 s.el.style.transform = `translate(${s.x}px, ${s.y}px)`;
-
-                // Hover detection - spiders scuttle away
                 s.el.onmouseenter = () => {
                     s.speedX = (Math.random() + 0.5) * 2 * (s.speedX < 0 ? 1 : -1);
                     s.speedY = (Math.random() + 0.5) * 2 * (s.speedY < 0 ? 1 : -1);
@@ -520,7 +511,6 @@
         }
         moveSpiders();
 
-        // Shadow flickers random placement
         const shadowContainer = document.getElementById('shadow-flickers');
         function createShadowShapes() {
             for (let i = 0; i < 5; i++) {
@@ -553,12 +543,10 @@
             }
         });
 
-        // Start ambient by default after short delay
         setTimeout(() => {
             ambientAudio.play().catch(() => { });
         }, 100);
 
-        // Occasional glitch effect on mirror surface
         function randomGlitch() {
             if (Math.random() < 0.1) {
                 mirrorSurface.classList.add('glitch');
@@ -583,7 +571,6 @@
                 setTimeout(() => flash.remove(), 150);
             }
         }, 10000);
-        // Add inside a <script> tag at bottom of body
         function spawnDrip() {
             const drip = document.createElement('div');
             drip.className = 'blood-drip';
@@ -593,18 +580,17 @@
             setTimeout(() => drip.remove(), 3000);
         }
 
-        setInterval(spawnDrip, 800); // Spawn every 0.8s
+        setInterval(spawnDrip, 800); 
 
     </script>
     <script>
         document.querySelectorAll('.reflection').forEach(reflection => {
-            // Tap or click
             reflection.addEventListener('click', () => {
                 const project = reflection.getAttribute('data-project');
                 handleNavigation(project);
             });
 
-            // Touch support (for tap on iPad)
+            // Touch support 
             reflection.addEventListener('touchstart', (e) => {
                 e.preventDefault(); // Prevents double-trigger on iOS
                 const project = reflection.getAttribute('data-project');
@@ -628,8 +614,5 @@
             }
         }
     </script>
-
-
 </body>
-
 </html>

@@ -7,19 +7,16 @@
 </head>
 <body>
  <div id="bg-creep"></div>
+ <audio id="static-sound" src="static.mp3" loop></audio>
  <img id="background-image" src="option1.png" alt="background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;" />
 
-  <!-- START EXPERIENCE SCREEN -->
+  <!-- Start Screen -->
   <div id="start-screen">
     <button id="start-btn">Start Experience</button>
     <a href="index.html" id="return-btn">Back To Homepage</a>
   </div>
 
-  <!-- Static Noise -->
-  <audio id="static-sound" src="static.mp3" loop></audio>
-
-
-  <!-- DO YOU LIKE SCARY MOVIES? -->
+  <!-- Do you like scary movies? -->
   <div id="scary-movie-prompt" style="display: none;">DO YOU LIKE SCARY MOVIES?</div>
   <audio id="scary-movie-audio" src="scarymovies.mp3"></audio>
   <a href="index.html" id="return-btn">Back To Homepage</a>
@@ -29,8 +26,7 @@
     <img src="ghostface.png" alt="Ghostface" />
     <audio id="scream-sound" src="jumpscareaudio.mp3"></audio>
   </div>
-
-  <!-- TV EXPERIENCE -->
+  <!--Tv-->
   <div id="tv-experience">
     <div id="vhs-menu">
       <button class="vhs-btn" onclick="playClip(0)">Tape 1</button>
@@ -46,7 +42,7 @@
     <a href="reveal.html" id="reveal-loss-btn">Reveal What We Lost</a>
   </section>
 
-  <!-- What We Lost Fullscreen Section -->
+  <!-- What We Lost Section -->
   <section id="what-we-lost">
       <h1>What We Lost</h1>
       <p class="final-text">
@@ -381,34 +377,25 @@ const clips = [
 startBtn.addEventListener("click", () => {
   startScreen.style.display = "none";
   staticAudio.play();
-
-  // Wait 5 seconds before showing prompt
   setTimeout(() => {
-    // Pause static and play "DO YOU LIKE SCARY MOVIES?" audio
     staticAudio.pause();
     staticAudio.currentTime = 0;
-
     prompt.style.display = "block";
     scaryAudio.play();
-
     scaryAudio.onended = () => {
-      // Keep prompt visible and resume static
       staticAudio.play();
-
-      // After 4 seconds of static, then jumpscare
       setTimeout(() => {
         prompt.style.display = "none";
         jumpscare.style.display = "flex";
         scream.play();
-
         setTimeout(() => {
           jumpscare.style.display = "none";
           tvExperience.style.display = "flex";
           playClip(0);
-        }, 3000); // jumpscare duration
-      }, 4000); // static duration after scary audio
+        }, 3000);
+      }, 4000); 
     };
-  }, 5000); // initial delay before prompt
+  }, 5000);
 });
 
 
@@ -427,7 +414,6 @@ function playClip(index) {
   ambient.src = clip.ambient;
   ambient.play();
 
-  // Remove all special classes first
   const cueTextDiv = visualCue.querySelector('.cue-text');
   if (cueTextDiv) {
     cueTextDiv.classList.remove('clip1', 'clip2', 'clip3', 'clip4');
@@ -435,10 +421,8 @@ function playClip(index) {
   originalScript.classList.remove('clip1-text', 'clip2-text', 'clip3-text', 'clip4-text');
   movieScript.classList.remove('clip1-text', 'clip2-text', 'clip3-text', 'clip4-text');
 
-  // Set cue text with class for white color
   visualCue.innerHTML = `<div class="cue-text clip${index + 1}">${clip.cue}</div>`;
 
-  // Add white color classes to scripts
   originalScript.classList.add(`clip${index + 1}-text`);
   movieScript.classList.add(`clip${index + 1}-text`);
 
@@ -446,7 +430,6 @@ function playClip(index) {
   movieScript.innerText = clip.movie;
   showScript("original");
 
-  // Auto transition after final clip
   if (index === clips.length - 1) {
     setTimeout(() => {
       tvExperience.style.display = "none";
@@ -456,31 +439,22 @@ function playClip(index) {
 }
 
 
-const bgImage = document.getElementById('background-image'); // Your img element
+const bgImage = document.getElementById('background-image');
 let creepInterval;
 let startTime = null;
 
 function creepyMove(timestamp) {
   if (!startTime) startTime = timestamp;
-  const elapsed = (timestamp - startTime) / 1000; // seconds
-
-  // Slow smooth oscillation with sin wave
-  const xDrift = Math.sin(elapsed * 0.7) * 10; // 10px left-right
-  const yDrift = Math.cos(elapsed * 0.5) * 8;  // 8px up-down
-
-  // Random jitter every frame (small, quick shakes)
-  const jitterX = (Math.random() - 0.5) * 2; // ±1px jitter
+  const elapsed = (timestamp - startTime) / 1000; 
+  const xDrift = Math.sin(elapsed * 0.7) * 10; 
+  const yDrift = Math.cos(elapsed * 0.5) * 8;  
+  const jitterX = (Math.random() - 0.5) * 2
   const jitterY = (Math.random() - 0.5) * 2;
-
-  // Slight scale flicker between 0.98 and 1.02
   const scale = 1 + Math.sin(elapsed * 3) * 0.02;
-
   bgImage.style.transform = `translate(${xDrift + jitterX}px, ${yDrift + jitterY}px) scale(${scale.toFixed(3)})`;
-
   creepInterval = requestAnimationFrame(creepyMove);
 }
 
-// Start the creepy movement after 1 second
 setTimeout(() => {
   creepInterval = requestAnimationFrame(creepyMove);
 }, 1000);
@@ -490,7 +464,6 @@ function pauseStaticIfNeeded() {
 }
 
 function resumeStaticIfSafe() {
-  // Resume only if not during jumpscare or video playing
   if (jumpscareIsActive === false && tvVideo.paused) {
     staticAudio.play();
   }
@@ -499,7 +472,7 @@ function resumeStaticIfSafe() {
 let jumpscareIsActive = false;
 
 function showScaryPrompt() {
-  pauseStaticIfNeeded(); // pause during "DO YOU LIKE SCARY MOVIES?"
+  pauseStaticIfNeeded(); 
   scaryText.style.display = "block";
   scaryAudio.play();
 
@@ -507,19 +480,17 @@ function showScaryPrompt() {
     scaryText.style.display = "none";
     scaryAudio.pause();
     scaryAudio.currentTime = 0;
-
-    // Static resumes for 4 seconds, then jumpscare
     staticAudio.play();
 
     setTimeout(() => {
       triggerJumpscare();
-    }, 4000); // 4 seconds of static before jumpscare
-  }, 5000); // Display scary text for 5 seconds
+    }, 4000);
+  }, 5000); 
 }
 
 function triggerJumpscare() {
   jumpscareIsActive = true;
-  pauseStaticIfNeeded(); // pause during jumpscare
+  pauseStaticIfNeeded(); 
   document.getElementById("jumpscare").style.display = "block";
   screamSound.play();
 
@@ -527,11 +498,11 @@ function triggerJumpscare() {
     document.getElementById("jumpscare").style.display = "none";
     jumpscareIsActive = false;
     resumeStaticIfSafe();
-  }, 3000); // Hide jumpscare after 3s
+  }, 3000);
 }
 
 function playClip(index) {
-  pauseStaticIfNeeded(); // pause during tape play
+  pauseStaticIfNeeded();
   jumpscareIsActive = false;
 
   const clipUrls = [

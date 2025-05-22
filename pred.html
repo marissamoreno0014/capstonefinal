@@ -248,11 +248,10 @@
       cursor: pointer;
     }
 
-    /* ====== Responsive Styling ====== */
     @media screen and (min-width: 1024px) and (max-width: 1366px) {
     .file {
-    max-width: 600px;  /* or something narrower to fit iPad nicely */
-    margin: 4rem auto; /* auto left/right margin to center */
+    max-width: 600px; 
+    margin: 4rem auto;
     padding: 2rem;
     transform-origin: top;
     }
@@ -316,10 +315,10 @@
   <div class="blood"></div>
 
   <div class="file">
-    <img src="finger.png" alt="fingerprint" class="fingerprint fp1" />
-    <img src="finger.png" alt="fingerprint" class="fingerprint fp2" />
-    <img src="finger.png" alt="fingerprint" class="fingerprint fp3" />
-    <img src="finger.png" alt="fingerprint" class="fingerprint fp4" />
+    <img src="finger.png" class="fingerprint fp1" />
+    <img src="finger.png" class="fingerprint fp2" />
+    <img src="finger.png" class="fingerprint fp3" />
+    <img src="finger.png" class="fingerprint fp4" />
 
     <h1>Hays Case No. 147<br>The Lesbian of Sweet Hollow</h1>
     <div class="stamp">FORBIDDEN</div>
@@ -356,7 +355,6 @@
     </div>
   </div>
 
-  <!-- Toggle Button -->
   <button id="toggleRedaction" onclick="toggleRedaction()">☣️ Reveal Redacted</button>
 
   <script>
@@ -411,9 +409,6 @@
       });
     }
   </script>
-  
 <a href="index.html" class="home-button" aria-label="Home">&#8962; Home</a>
-
-  
 </body>
 </html>

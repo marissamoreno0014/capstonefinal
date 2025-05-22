@@ -17,7 +17,7 @@ function showSection(index) {
     });
 }
 
-// Click on left/right side of coffin to go backward/forward
+// Click on coffin to go forward
 const coffinContainer = document.getElementById('coffin-container');
 
 coffinContainer.addEventListener('click', (e) => {
@@ -26,13 +26,11 @@ coffinContainer.addEventListener('click', (e) => {
 
     if (!storyOverlay.classList.contains('hidden')) {
         if (clickX < screenWidth / 2) {
-            // Left side = previous
             if (currentSection > 0) {
                 currentSection--;
                 showSection(currentSection);
             }
         } else {
-            // Right side = next
             if (currentSection < storySections.length - 1) {
                 currentSection++;
                 showSection(currentSection);
@@ -41,16 +39,15 @@ coffinContainer.addEventListener('click', (e) => {
     }
 });
 
-// Function to create flying vampire images
 function spawnVampire() {
     let vampire = document.createElement("img");
-    vampire.src = "vampire.png";  // Make sure you have a vampire PNG
+    vampire.src = "vampire.png"; 
     vampire.classList.add("vampire");
     document.body.appendChild(vampire);
 
-    let startX = Math.random() > 0.5 ? -100 : window.innerWidth + 100; // Start off-screen
-    let endX = startX > 0 ? -100 : window.innerWidth + 100; // End off-screen
-    let startY = Math.random() * window.innerHeight * 0.6; // Random height
+    let startX = Math.random() > 0.5 ? -100 : window.innerWidth + 100;
+    let endX = startX > 0 ? -100 : window.innerWidth + 100;
+    let startY = Math.random() * window.innerHeight * 0.6;
 
     vampire.style.top = `${startY}px`;
     vampire.style.left = `${startX}px`;
@@ -58,21 +55,20 @@ function spawnVampire() {
     vampire.animate([
         { transform: `translateX(${endX - startX}px)` }
     ], {
-        duration: 4000 + Math.random() * 2000, // Random speed
+        duration: 4000 + Math.random() * 2000, 
         easing: "linear"
     });
 
-    setTimeout(() => vampire.remove(), 6000); // Remove after animation
+    setTimeout(() => vampire.remove(), 6000);
 }
 
-// Spawn vampires randomly during the story
+// Spawn vampires randomly 
 setInterval(() => {
     if (document.querySelector("#story-overlay").classList.contains("visible")) {
         spawnVampire();
     }
 }, 7000);
 document.addEventListener("DOMContentLoaded", function () {
-    // Shadow Figures for "shadows had sharpened their knives"
     const shadowTrigger = document.querySelector("#shadow-scene");
     shadowTrigger.addEventListener("mouseenter", function () {
         let shadowLeft = document.createElement("img");
@@ -106,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
     bloodTrigger.addEventListener("mouseenter", function () {
         let blood = document.createElement("span");
         blood.classList.add("blood-drip");
-        blood.innerText = "滴滴"; // Dripping effect
         bloodTrigger.appendChild(blood);
         setTimeout(() => {
             blood.remove();
@@ -122,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 800);
     });
 
-    // Mist Rolls in for the Ending
+    // Mist 
     const endingTrigger = document.querySelector("#ending-scene");
     endingTrigger.addEventListener("mouseenter", function () {
         let endingMist = document.createElement("div");
@@ -130,55 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(endingMist);
     });
 });
-function spawnVampire() {
-    let vampire = document.createElement("img");
-    vampire.src = "vampire.png"; // Ensure "vampire.png" is in the same folder as index.html
-    vampire.classList.add("vampire");
 
-    // Choose a random spawn position: left, right, or top
-    let spawnSide = Math.floor(Math.random() * 3); 
-    let startX, startY, endX, endY;
-
-    if (spawnSide === 0) { 
-        // Left side
-        startX = "-10%";
-        startY = Math.random() * 80 + "%";
-        endX = "110%";
-        endY = Math.random() * 80 + "%";
-    } else if (spawnSide === 1) { 
-        // Right side
-        startX = "110%";
-        startY = Math.random() * 80 + "%";
-        endX = "-10%";
-        endY = Math.random() * 80 + "%";
-    } else { 
-        // Top side
-        startX = Math.random() * 80 + "%";
-        startY = "-10%";
-        endX = Math.random() * 80 + "%";
-        endY = "110%";
-    }
-
-    vampire.style.position = "fixed";
-    vampire.style.left = startX;
-    vampire.style.top = startY;
-
-    // Set animation dynamically
-    vampire.style.transition = `all ${Math.random() * 4 + 3}s linear`;
-    document.body.appendChild(vampire);
-
-    setTimeout(() => {
-        vampire.style.left = endX;
-        vampire.style.top = endY;
-        vampire.style.opacity = "1";
-    }, 50); 
-
-    // Remove vampire after animation ends
-    setTimeout(() => vampire.remove(), 5000);
-}
-
-// Spawn a vampire at random intervals (every 5-12 seconds)
-setInterval(spawnVampire, Math.random() * 7000 + 5000);
 
 function addMist() {
     let mist = document.createElement("div");
@@ -186,9 +133,7 @@ function addMist() {
     document.body.appendChild(mist);
 }
 
-// Wait for the page to load, then add mist
 window.onload = addMist;
-// Function to create the mist effect
 function showMist() {
     let mist = document.createElement("div");
     mist.classList.add("mist");
@@ -197,17 +142,16 @@ function showMist() {
     mist.style.left = "0";
     mist.style.width = "100%";
     mist.style.height = "150px";
-    mist.style.backgroundImage = "url('mist.png')"; // Ensure mist.png is correct
+    mist.style.backgroundImage = "url('mist.png')"; 
     mist.style.backgroundSize = "cover";
     mist.style.opacity = "0.7";
-    mist.style.zIndex = "900"; // Ensure it's above background but below text
+    mist.style.zIndex = "900"; 
     document.body.appendChild(mist);
 }
 
-// Function to create the Reaper effect
 function showReaper() {
     let reaper = document.createElement("img");
-    reaper.src = "reaper.png"; // Ensure this file exists
+    reaper.src = "reaper.png"; 
     reaper.classList.add("reaper");
     reaper.style.position = "fixed";
     reaper.style.top = "20%";
@@ -218,35 +162,31 @@ function showReaper() {
 
     document.body.appendChild(reaper);
     
-    setTimeout(() => { reaper.remove(); }, 3000); // Remove after 3 sec
+    setTimeout(() => { reaper.remove(); }, 3000);
 }
 
-
-// Function to create the shadow effect
 function showShadow() {
     let shadow = document.createElement("img");
-    shadow.src = "shadow.png"; // Make sure the file exists and path is correct
+    shadow.src = "shadow.png"; 
     shadow.classList.add("shadow-figure");
     shadow.style.position = "fixed";
-    shadow.style.top = Math.random() * 80 + "%"; // Random vertical position
-    shadow.style.left = Math.random() * 80 + "%"; // Random horizontal position
-    shadow.style.width = "150px"; // Adjust as needed
+    shadow.style.top = Math.random() * 80 + "%";
+    shadow.style.left = Math.random() * 80 + "%"; 
+    shadow.style.width = "150px";
     shadow.style.opacity = "0.8";
     shadow.style.zIndex = "9999";
     
-    // White outline for visibility
     shadow.style.filter = "drop-shadow(0px 0px 10px white)";
 
     document.body.appendChild(shadow);
     
-    setTimeout(() => { shadow.remove(); }, 2000); // Remove after 2 sec
+    setTimeout(() => { shadow.remove(); }, 2000);
 }
 
-// Call the functions when the page loads (or at specific times)
 window.onload = function() {
-    showMist(); // Mist should always be visible
-    setTimeout(showReaper, 5000); // Show Reaper after 5 seconds
-    setInterval(showShadow, 7000); // Show shadows every 7 seconds
+    showMist();
+    setTimeout(showReaper, 5000); 
+    setInterval(showShadow, 7000); 
 };
 document.addEventListener("DOMContentLoaded", function () {
     let sections = document.querySelectorAll(".story-section");
@@ -259,17 +199,14 @@ document.addEventListener("DOMContentLoaded", function () {
     
         const currentText = sections[index].innerText;
     
-        // 🔪 Blade Drip Effect
         if (currentText.includes("blade dripping")) {
             sections[index].classList.add("drip-effect");
         }
     
-        // ☠️ Reaper Effect
         if (currentText.includes("The Reaper—hooded and hollow-eyed—had grown weary")) {
             showReaper();
         }
     
-        // ⏳ Glitch Effect
         if (currentText.includes("script stuttered")) {
             sections[index].classList.add("glitch-text");
             setTimeout(() => {
@@ -277,25 +214,62 @@ document.addEventListener("DOMContentLoaded", function () {
             }, 800);
         }
     
-        // 🌫️ Mist for Ending
+        //  Mist for Ending
        // if (currentText.includes("vanishing into the mist-draped dawn")) {
            // showMist();
         //}
     
-        // ⚠️ Shadow Knives
+        // Shadow Knives
         //if (currentText.includes("shadows had sharpened their knives")) {
            // showShadow();
        // }
     }
     
-    // Initially show the first section
     showSection(currentSection);
 
-    // Add click event for navigation
     document.addEventListener("click", function () {
         if (currentSection < sections.length - 1) {
             currentSection++;
             showSection(currentSection);
+        }
+    });
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const coffinImage = document.getElementById("coffin-image");
+    const storyOverlay = document.getElementById("story-overlay");
+    const storySections = document.querySelectorAll(".story-section");
+    const openCoffin = document.getElementById("open-coffin");
+
+    let currentSectionIndex = 0;
+
+    function showNextSection() {
+        if (currentSectionIndex < storySections.length - 1) {
+            storySections[currentSectionIndex].classList.remove("active");
+            currentSectionIndex++;
+            storySections[currentSectionIndex].classList.add("active");
+
+            if (currentSectionIndex === 8) {
+                document.getElementById("reaper-shadow").classList.add("visible");
+            }
+        }
+    }
+
+    coffinImage.addEventListener("click", function () {
+        coffinImage.style.opacity = 0;
+        setTimeout(() => {
+            coffinImage.style.display = "none";
+            storyOverlay.classList.remove("hidden");
+        }, 1000);
+    });
+
+    document.querySelectorAll(".next-btn").forEach(button => {
+        button.addEventListener("click", showNextSection);
+    });
+
+    storyOverlay.addEventListener("click", function (e) {
+        if (e.target.classList.contains("next-btn")) return;
+        if (!storySections[currentSectionIndex].querySelector(".next-btn")) {
+            showNextSection();
         }
     });
 });
